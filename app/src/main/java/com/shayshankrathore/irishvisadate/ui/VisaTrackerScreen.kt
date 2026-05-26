@@ -303,23 +303,38 @@ fun VisaTrackerScreen(onNavigate: (AppScreen) -> Unit) {
 
             // ── Visa type ─────────────────────────────────────────────────
             AccentCard(title = "🛂  VISA TYPE", accentColor = IrishGreen) {
-                SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-                    VisaType.entries.forEachIndexed { i, type ->
-                        SegmentedButton(
-                            selected = visaType == type,
-                            onClick  = { visaType = type },
-                            shape    = SegmentedButtonDefaults.itemShape(i, VisaType.entries.size),
-                            colors   = SegmentedButtonDefaults.colors(
-                                activeContainerColor   = IrishGreen,
-                                activeContentColor     = Color.White,
-                                inactiveContainerColor = SurfaceCard,
-                                inactiveContentColor   = TextSecondary,
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    VisaType.entries.forEach { type ->
+                        val selected = visaType == type
+                        Surface(
+                            onClick = { visaType = type },
+                            shape   = RoundedCornerShape(10.dp),
+                            border  = androidx.compose.foundation.BorderStroke(
+                                1.5.dp,
+                                if (selected) IrishGreen else DividerGreen,
                             ),
-                            label = {
-                                Text(type.label, style = MaterialTheme.typography.labelSmall,
-                                    fontWeight = FontWeight.SemiBold, textAlign = TextAlign.Center)
-                            },
-                        )
+                            color = if (selected) IrishGreen.copy(alpha = 0.08f) else SurfaceCard,
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp, vertical = 14.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                RadioButton(
+                                    selected = selected,
+                                    onClick  = { visaType = type },
+                                    colors   = RadioButtonDefaults.colors(selectedColor = IrishGreen),
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    text       = type.label,
+                                    fontWeight = if (selected) FontWeight.Bold else FontWeight.SemiBold,
+                                    fontSize   = 15.sp,
+                                    color      = if (selected) IrishGreenDark else TextSecondary,
+                                )
+                            }
+                        }
                     }
                 }
             }
