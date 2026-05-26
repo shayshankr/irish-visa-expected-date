@@ -43,15 +43,15 @@ import java.util.Locale
 
 // ── Domain types ──────────────────────────────────────────────────────────────
 
-enum class VacLocation(val label: String, val transitDays: Int) {
-    DELHI("Delhi", VAC_DELHI_TRANSIT_DAYS),
-    OTHER("Mumbai / Bengaluru /\nChennai / Kolkata", VAC_OTHER_TRANSIT_DAYS),
+enum class VacLocation(val label: String, val transitDays: Int, val cities: String) {
+    DELHI("Delhi", VAC_DELHI_TRANSIT_DAYS, "Delhi"),
+    OTHER("Other Cities", VAC_OTHER_TRANSIT_DAYS, "Mumbai / Bengaluru / Chennai / Kolkata"),
 }
 
 enum class VisaType(val label: String, val minDays: Int, val maxDays: Int) {
-    SHORT_STAY("Short Stay C\n(Tourist/Business)", SHORT_STAY_MIN_DAYS, SHORT_STAY_MAX_DAYS),
-    STUDY("Long Stay D\n(Study)", STUDY_MIN_DAYS, STUDY_MAX_DAYS),
-    JOIN_FAMILY("Long Stay D\n(Join Family)", JOIN_FAMILY_MIN_DAYS, JOIN_FAMILY_MAX_DAYS),
+    SHORT_STAY("Short Stay C", SHORT_STAY_MIN_DAYS, SHORT_STAY_MAX_DAYS),
+    STUDY("Study (D)", STUDY_MIN_DAYS, STUDY_MAX_DAYS),
+    JOIN_FAMILY("Join Family (D)", JOIN_FAMILY_MIN_DAYS, JOIN_FAMILY_MAX_DAYS),
 }
 
 private val DATE_FMT: DateTimeFormatter =
@@ -106,6 +106,7 @@ private fun IrishHeader() {
         modifier = Modifier
             .fillMaxWidth()
             .background(Brush.verticalGradient(listOf(Color(0xFF063320), Color(0xFF0F6B40))))
+            .windowInsetsPadding(WindowInsets.statusBars)
     ) {
         // Harp watermark (right side)
         Canvas(
@@ -293,7 +294,7 @@ fun VisaTrackerScreen(onNavigate: (AppScreen) -> Unit) {
                     Box(Modifier.size(8.dp).background(IrishGreenMid, RoundedCornerShape(4.dp)))
                     Spacer(Modifier.width(6.dp))
                     Text(
-                        text = "${vacLocation.transitDays} working day${plural(vacLocation.transitDays.toLong())} transit from Visa Application Centre to Irish Embassy",
+                        text = "${vacLocation.cities} — ${vacLocation.transitDays} working day${plural(vacLocation.transitDays.toLong())} transit to Irish Embassy",
                         style = MaterialTheme.typography.bodySmall,
                         color = TextSecondary,
                     )
