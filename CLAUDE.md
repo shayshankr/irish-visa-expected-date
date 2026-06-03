@@ -9,11 +9,10 @@ Run from the project root on Windows (use `./gradlew` on Mac/Linux):
 ```powershell
 # Build
 .\gradlew.bat assembleDebug
-.\gradlew.bat assembleRelease
+.\gradlew.bat bundleRelease
 
 # Unit tests (JVM — includes WorkingDaysTest)
-.\gradlew.bat :app:test
-.\gradlew.bat :app:test --tests "com.example.irishvisaexpecteddate.WorkingDaysTest"
+.\gradlew.bat :app:testDebugUnitTest
 
 # Instrumented tests (requires connected device/emulator)
 .\gradlew.bat connectedAndroidTest
@@ -30,20 +29,42 @@ Single-module Android app (`app`). No fragments — all UI is Jetpack Compose. S
 
 | File | Purpose |
 |---|---|
-| `Constants.kt` | All editable processing-time ranges and VAC transit-day constants. **Edit here when official times change.** |
-| `Holidays.kt` | Hardcoded 2026/2027 Irish + Indian public holiday sets. Has `HOLIDAYS_LAST_UPDATED` constant. Floating holidays (Eid, Holi, Diwali, etc.) are approximate — verify each year. |
-| `WorkingDays.kt` | `LocalDate.addWorkingDays(n)` and `workingDaysBetween(from, to)` — skip weekends + `ALL_HOLIDAYS`. |
-| `ui/VisaTrackerScreen.kt` | Main screen: date input, VAC/visa-type selectors, decision-window card, status-update buttons, and "No decision yet" bottom sheet. |
+| `Constants.kt` | Processing-time ranges (working days) for each visa type. **Edit here when official times change.** |
+| `Embassy.kt` | `Embassy` and `VacOption` data classes + all 7 embassy instances + `ALL_EMBASSIES` list. **Add/edit embassies and VAC offices here.** |
+| `Holidays.kt` | Per-country public holiday sets for 2026/2027. Irish holidays are a shared private base; each country's set is stacked on top. Has `HOLIDAYS_LAST_UPDATED` constant. Floating holidays (Eid, Holi, Diwali, Chinese New Year, etc.) are approximate — verify each year. |
+| `WorkingDays.kt` | `LocalDate.addWorkingDays(n, holidays)` and `workingDaysBetween(from, to, holidays)` — skip weekends + the provided holiday set. Default parameter = `ALL_HOLIDAYS` (India set) for backward compat with tests. |
+| `ui/VisaTrackerScreen.kt` | Main screen: embassy dropdown, VAC radio cards, date input, visa-type selector, decision-window card, status-update buttons, "No decision yet" bottom sheet. |
 | `ui/VisaGrantedScreen.kt` | Green celebration screen with Canvas confetti animation. |
 | `ui/VisaRefusedScreen.kt` | Appeal countdown + `openCustomTab()` helper used across the app. |
 
+### Supported embassies
+
+| Embassy | Countries served | VAC offices |
+|---|---|---|
+| 🇮🇳 India (New Delhi) | India | Delhi (1 day), Other cities (2 days) |
+| 🇷🇺 Russia/CIS (Moscow) | Russia, Kazakhstan, Uzbekistan, Kyrgyzstan, Tajikistan, Turkmenistan | Moscow (1 day), Almaty (2 days), Other CIS (3 days) |
+| 🇬🇧 UK (London) | United Kingdom | London (1 day), Other UK (2 days) |
+| 🇨🇳 China (Beijing) | China | Beijing (1 day), Shanghai (2 days), Other cities (3 days) |
+| 🇹🇷 Turkey (Ankara) | Turkey | Ankara (1 day), Istanbul (2 days) |
+| 🇦🇪 UAE (Abu Dhabi) | UAE and Gulf | Abu Dhabi (1 day), Dubai (2 days) |
+| 🇵🇰 Pakistan (Islamabad) | Pakistan | Islamabad (1 day), Karachi (2 days), Lahore (2 days) |
+
+Transit days are working days from VAC submission to the Irish Embassy receiving the file.
+
 ### Decision-window calculation
 ```
-embassyReceiveDate  = submissionDate.addWorkingDays(vac.transitDays)
-earliestDecision    = embassyReceiveDate.addWorkingDays(visaType.minDays)
-latestDecision      = embassyReceiveDate.addWorkingDays(visaType.maxDays)
+embassyReceiveDate  = submissionDate.addWorkingDays(vac.transitDays, embassy.holidays)
+earliestDecision    = embassyReceiveDate.addWorkingDays(visaType.minDays, embassy.holidays)
+latestDecision      = embassyReceiveDate.addWorkingDays(visaType.maxDays, embassy.holidays)
 ```
 Day 1 of transit = the lodgment day itself (VAC submission date).
+Holidays used = Irish public holidays + host-country public holidays (defined per embassy in `Holidays.kt`).
+
+### Adding a new embassy
+1. Add the country's holiday set to `Holidays.kt` (stack on top of `IRISH` private val).
+2. Add an `Embassy(...)` instance to `Embassy.kt` with its `VacOption` list and decisions URL.
+3. Append the instance to `ALL_EMBASSIES`.
+4. Update `HOLIDAYS_LAST_UPDATED` in `Holidays.kt`.
 
 ### Theme
 `ui/theme/IrishVisaExpectedDateTheme` supports Material You dynamic color on Android 12+ (API 31+), falling back to static colours. Dark mode follows system setting.
