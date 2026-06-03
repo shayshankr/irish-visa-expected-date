@@ -21,16 +21,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.shayshankrathore.irishvisadate.COURIER_RETURN_DAYS
+import com.shayshankrathore.irishvisadate.ALL_EMBASSIES
+import com.shayshankrathore.irishvisadate.Embassy
 import com.shayshankrathore.irishvisadate.JOIN_FAMILY_MAX_DAYS
 import com.shayshankrathore.irishvisadate.JOIN_FAMILY_MIN_DAYS
 import com.shayshankrathore.irishvisadate.SHORT_STAY_MAX_DAYS
 import com.shayshankrathore.irishvisadate.SHORT_STAY_MIN_DAYS
 import com.shayshankrathore.irishvisadate.STUDY_MAX_DAYS
 import com.shayshankrathore.irishvisadate.STUDY_MIN_DAYS
-import com.shayshankrathore.irishvisadate.URL_DECISIONS_PAGE
-import com.shayshankrathore.irishvisadate.VAC_DELHI_TRANSIT_DAYS
-import com.shayshankrathore.irishvisadate.VAC_OTHER_TRANSIT_DAYS
+import com.shayshankrathore.irishvisadate.VacOption
 import com.shayshankrathore.irishvisadate.addWorkingDays
 import com.shayshankrathore.irishvisadate.workingDaysBetween
 import com.shayshankrathore.irishvisadate.ui.theme.*
@@ -42,11 +41,6 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 // ── Domain types ──────────────────────────────────────────────────────────────
-
-enum class VacLocation(val label: String, val transitDays: Int, val cities: String) {
-    DELHI("Delhi", VAC_DELHI_TRANSIT_DAYS, "Delhi"),
-    OTHER("Other Cities", VAC_OTHER_TRANSIT_DAYS, "Mumbai / Bengaluru / Chennai / Kolkata"),
-}
 
 enum class VisaType(val label: String, val minDays: Int, val maxDays: Int) {
     SHORT_STAY("Short Stay C", SHORT_STAY_MIN_DAYS, SHORT_STAY_MAX_DAYS),
@@ -69,25 +63,21 @@ private fun DrawScope.drawHarp(alpha: Float = 0.13f) {
     val w  = size.width
     val h  = size.height
 
-    // Curved neck
     val neck = Path().apply {
         moveTo(w * 0.60f, h * 0.04f)
         cubicTo(w * 1.00f, h * 0.18f, w * 0.88f, h * 0.62f, w * 0.58f, h * 0.93f)
     }
     drawPath(neck, c, style = Stroke(width = sw, cap = StrokeCap.Round))
 
-    // Column (left vertical)
     drawLine(c, androidx.compose.ui.geometry.Offset(w * 0.08f, h * 0.10f),
                 androidx.compose.ui.geometry.Offset(w * 0.08f, h * 0.93f), sw)
 
-    // Sound box
     val box = Path().apply {
         moveTo(w * 0.08f, h * 0.93f)
         cubicTo(w * 0.22f, h * 1.04f, w * 0.44f, h * 1.04f, w * 0.58f, h * 0.93f)
     }
     drawPath(box, c, style = Stroke(width = sw, cap = StrokeCap.Round))
 
-    // Strings (8)
     for (i in 0..7) {
         val t = i / 7f
         val sy = h * (0.14f + t * 0.71f)
@@ -108,7 +98,6 @@ private fun IrishHeader() {
             .background(Brush.verticalGradient(listOf(Color(0xFF063320), Color(0xFF0F6B40))))
             .windowInsetsPadding(WindowInsets.statusBars)
     ) {
-        // Harp watermark (right side)
         Canvas(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
@@ -124,7 +113,6 @@ private fun IrishHeader() {
                     .padding(top = 20.dp, bottom = 18.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                // Shamrock badge
                 Box(
                     modifier = Modifier
                         .size(48.dp)
@@ -151,7 +139,6 @@ private fun IrishHeader() {
                 }
             }
 
-            // Irish tricolor stripe
             Row(modifier = Modifier.fillMaxWidth().height(5.dp)) {
                 Box(Modifier.weight(1f).fillMaxHeight().background(IrishGreen))
                 Box(Modifier.weight(1f).fillMaxHeight().background(Color.White))
@@ -162,6 +149,7 @@ private fun IrishHeader() {
 }
 
 // ── Main screen ───────────────────────────────────────────────────────────────
+@Suppress("DEPRECATION")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VisaTrackerScreen(onNavigate: (AppScreen) -> Unit) {
@@ -169,10 +157,12 @@ fun VisaTrackerScreen(onNavigate: (AppScreen) -> Unit) {
     val today   = LocalDate.now()
     val todayMs = today.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
 
-    var submissionDate by remember { mutableStateOf<LocalDate?>(null) }
-    var vacLocation    by remember { mutableStateOf(VacLocation.DELHI) }
-    var visaType       by remember { mutableStateOf(VisaType.SHORT_STAY) }
-    var showDatePicker by remember { mutableStateOf(false) }
+    var selectedEmbassy by remember { mutableStateOf(ALL_EMBASSIES[0]) }
+    var selectedVac     by remember { mutableStateOf(ALL_EMBASSIES[0].vacOptions[0]) }
+    var submissionDate  by remember { mutableStateOf<LocalDate?>(null) }
+    var visaType        by remember { mutableStateOf(VisaType.SHORT_STAY) }
+    var showDatePicker  by remember { mutableStateOf(false) }
+    var embassyExpanded by remember { mutableStateOf(false) }
 
     val sheetState     = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showNoDecision by remember { mutableStateOf(false) }
@@ -225,7 +215,7 @@ fun VisaTrackerScreen(onNavigate: (AppScreen) -> Unit) {
                         showNoDecision = false
                     }
                 },
-                onOpenDecisions = { openCustomTab(context, URL_DECISIONS_PAGE) },
+                onOpenDecisions = { openCustomTab(context, selectedEmbassy.decisionsUrl) },
             )
         }
     }
@@ -242,6 +232,64 @@ fun VisaTrackerScreen(onNavigate: (AppScreen) -> Unit) {
                 .padding(horizontal = 16.dp, vertical = 14.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
+
+            // ── Embassy selector ──────────────────────────────────────────
+            AccentCard(title = "🌍  IRISH EMBASSY", accentColor = IrishGreen) {
+                ExposedDropdownMenuBox(
+                    expanded = embassyExpanded,
+                    onExpandedChange = { embassyExpanded = it },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    OutlinedTextField(
+                        value = "${selectedEmbassy.flag}  ${selectedEmbassy.label}",
+                        onValueChange = {},
+                        readOnly = true,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .menuAnchor(),
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = embassyExpanded)
+                        },
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = IrishGreen,
+                            unfocusedBorderColor = IrishGreen.copy(alpha = 0.45f),
+                            focusedTextColor = IrishGreenDark,
+                            unfocusedTextColor = IrishGreenDark,
+                            focusedTrailingIconColor = IrishGreen,
+                            unfocusedTrailingIconColor = IrishGreenDark,
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                        textStyle = LocalTextStyle.current.copy(
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 15.sp,
+                        ),
+                    )
+                    ExposedDropdownMenu(
+                        expanded = embassyExpanded,
+                        onDismissRequest = { embassyExpanded = false },
+                    ) {
+                        ALL_EMBASSIES.forEach { embassy ->
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = "${embassy.flag}  ${embassy.label}",
+                                        fontWeight = if (embassy == selectedEmbassy)
+                                            FontWeight.Bold else FontWeight.Normal,
+                                        color = if (embassy == selectedEmbassy)
+                                            IrishGreenDark else TextSecondary,
+                                    )
+                                },
+                                onClick = {
+                                    selectedEmbassy = embassy
+                                    selectedVac = embassy.vacOptions[0]
+                                    embassyExpanded = false
+                                },
+                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                            )
+                        }
+                    }
+                }
+            }
 
             // ── Submission date ───────────────────────────────────────────
             AccentCard(title = "📅  APPLICATION SUBMITTED", accentColor = IrishGreen) {
@@ -270,34 +318,46 @@ fun VisaTrackerScreen(onNavigate: (AppScreen) -> Unit) {
 
             // ── VAC location ──────────────────────────────────────────────
             AccentCard(title = "📍  VISA APPLICATION CENTRE (VAC) LOCATION", accentColor = IrishGreen) {
-                SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-                    VacLocation.entries.forEachIndexed { i, loc ->
-                        SegmentedButton(
-                            selected = vacLocation == loc,
-                            onClick  = { vacLocation = loc },
-                            shape    = SegmentedButtonDefaults.itemShape(i, VacLocation.entries.size),
-                            colors   = SegmentedButtonDefaults.colors(
-                                activeContainerColor   = IrishGreen,
-                                activeContentColor     = Color.White,
-                                inactiveContainerColor = SurfaceCard,
-                                inactiveContentColor   = TextSecondary,
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    selectedEmbassy.vacOptions.forEach { vac ->
+                        val selected = selectedVac == vac
+                        Surface(
+                            onClick = { selectedVac = vac },
+                            shape   = RoundedCornerShape(10.dp),
+                            border  = androidx.compose.foundation.BorderStroke(
+                                1.5.dp,
+                                if (selected) IrishGreen else DividerGreen,
                             ),
-                            label = {
-                                Text(loc.label, style = MaterialTheme.typography.labelSmall,
-                                    fontWeight = FontWeight.SemiBold)
-                            },
-                        )
+                            color = if (selected) IrishGreen.copy(alpha = 0.08f) else SurfaceCard,
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp, vertical = 10.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                RadioButton(
+                                    selected = selected,
+                                    onClick  = { selectedVac = vac },
+                                    colors   = RadioButtonDefaults.colors(selectedColor = IrishGreen),
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Column {
+                                    Text(
+                                        text       = vac.label,
+                                        fontWeight = if (selected) FontWeight.Bold else FontWeight.SemiBold,
+                                        fontSize   = 15.sp,
+                                        color      = if (selected) IrishGreenDark else TextSecondary,
+                                    )
+                                    Text(
+                                        text  = "${vac.cities} — ${vac.transitDays} working day${plural(vac.transitDays.toLong())} transit",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = TextHint,
+                                    )
+                                }
+                            }
+                        }
                     }
-                }
-                Spacer(Modifier.height(8.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(Modifier.size(8.dp).background(IrishGreenMid, RoundedCornerShape(4.dp)))
-                    Spacer(Modifier.width(6.dp))
-                    Text(
-                        text = "${vacLocation.cities} — ${vacLocation.transitDays} working day${plural(vacLocation.transitDays.toLong())} transit to Irish Embassy",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondary,
-                    )
                 }
             }
 
@@ -342,18 +402,19 @@ fun VisaTrackerScreen(onNavigate: (AppScreen) -> Unit) {
             // ── Decision window ───────────────────────────────────────────
             if (submissionDate != null) {
                 val submission     = submissionDate!!
-                val transit        = vacLocation.transitDays
-                val embassyReceive = submission.addWorkingDays(transit)
-                val earliest       = embassyReceive.addWorkingDays(visaType.minDays)
-                val latest         = embassyReceive.addWorkingDays(visaType.maxDays)
+                val holidays       = selectedEmbassy.holidays
+                val transit        = selectedVac.transitDays
+                val embassyReceive = submission.addWorkingDays(transit, holidays)
+                val earliest       = embassyReceive.addWorkingDays(visaType.minDays, holidays)
+                val latest         = embassyReceive.addWorkingDays(visaType.maxDays, holidays)
 
-                val windowDays    = workingDaysBetween(earliest, latest)
-                val elapsed       = workingDaysBetween(earliest, today).coerceAtLeast(0L)
-                val elapsedSub    = workingDaysBetween(submission, today).coerceAtLeast(0L)
-                val isBeforeWindow= today.isBefore(earliest)
-                val isOverdue     = today.isAfter(latest)
-                val isInWindow    = !isBeforeWindow && !isOverdue
-                val progress      = when {
+                val windowDays    = workingDaysBetween(earliest, latest, holidays)
+                val elapsed       = workingDaysBetween(earliest, today, holidays).coerceAtLeast(0L)
+                val elapsedSub    = workingDaysBetween(submission, today, holidays).coerceAtLeast(0L)
+                val isBeforeWindow = today.isBefore(earliest)
+                val isOverdue      = today.isAfter(latest)
+                val isInWindow     = !isBeforeWindow && !isOverdue
+                val progress       = when {
                     isBeforeWindow -> 0f
                     isOverdue      -> 1f
                     windowDays > 0 -> (elapsed.toFloat() / windowDays).coerceIn(0f, 1f)
@@ -365,6 +426,7 @@ fun VisaTrackerScreen(onNavigate: (AppScreen) -> Unit) {
                     elapsedSub = elapsedSub, windowProgress = progress,
                     isBeforeWindow = isBeforeWindow, isOverdue = isOverdue,
                     isInWindow = isInWindow, transit = transit,
+                    courierNote = selectedEmbassy.courierNote,
                 )
 
                 // ── Status update ─────────────────────────────────────────
@@ -422,7 +484,8 @@ fun VisaTrackerScreen(onNavigate: (AppScreen) -> Unit) {
 private fun DecisionWindowCard(
     today: LocalDate, earliest: LocalDate, latest: LocalDate,
     elapsedSub: Long, windowProgress: Float,
-    isBeforeWindow: Boolean, isOverdue: Boolean, isInWindow: Boolean, transit: Int,
+    isBeforeWindow: Boolean, isOverdue: Boolean, isInWindow: Boolean,
+    transit: Int, courierNote: String,
 ) {
     val bgGradient = when {
         isOverdue  -> Brush.linearGradient(listOf(Color(0xFFFFF8E1), Color(0xFFFFECB3)))
@@ -440,7 +503,6 @@ private fun DecisionWindowCard(
             .border(1.5.dp, accentColor.copy(alpha = 0.35f), RoundedCornerShape(16.dp))
             .animateContentSize()
     ) {
-        // Left gradient stripe
         Box(
             modifier = Modifier
                 .width(5.dp)
@@ -476,14 +538,13 @@ private fun DecisionWindowCard(
             )
             Spacer(Modifier.height(4.dp))
             Text(
-                text = "(includes $transit working day${plural(transit.toLong())} Visa Application Centre transit)",
+                text = "(includes $transit working day${plural(transit.toLong())} VAC transit)",
                 style = MaterialTheme.typography.labelSmall,
                 color = TextHint,
             )
 
             Spacer(Modifier.height(16.dp))
 
-            // Gradient progress bar
             Box(
                 modifier = Modifier.fillMaxWidth().height(10.dp)
                     .clip(RoundedCornerShape(5.dp)).background(DividerGreen)
@@ -518,8 +579,7 @@ private fun DecisionWindowCard(
                 Text("📦", fontSize = 13.sp)
                 Spacer(Modifier.width(6.dp))
                 Text(
-                    text = "Plus ~$COURIER_RETURN_DAYS working days for return courier " +
-                           "(Irish Embassy → Delhi Visa Application Centre → your address via Blue Dart)",
+                    text = courierNote,
                     style = MaterialTheme.typography.bodySmall,
                     color = TextSecondary,
                 )
@@ -571,7 +631,7 @@ private fun StatChip(value: String, label: String, color: Color, alignEnd: Boole
 
 // ── Accent card ───────────────────────────────────────────────────────────────
 @Composable
-private fun AccentCard(
+internal fun AccentCard(
     title: String,
     accentColor: Color = IrishGreen,
     content: @Composable ColumnScope.() -> Unit,
@@ -629,7 +689,7 @@ private fun NoDecisionSheet(onClose: () -> Unit, onOpenDecisions: () -> Unit) {
         HorizontalDivider(color = DividerGreen)
         Spacer(Modifier.height(14.dp))
         Text(
-            text = "The Embassy publishes a daily decisions list around 11:00 IST. Check whether your name appears:",
+            text = "The Embassy publishes a daily decisions list. Check whether your name appears:",
             style = MaterialTheme.typography.bodyMedium,
             color = TextSecondary,
         )

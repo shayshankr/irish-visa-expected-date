@@ -2,77 +2,321 @@ package com.shayshankrathore.irishvisadate
 
 import java.time.LocalDate
 
-// ── Holiday list metadata ─────────────────────────────────────────────────────
-// Verify floating holidays (Islamic, Hindu lunar) against an official calendar
-// each year and update this constant when you do.
-const val HOLIDAYS_LAST_UPDATED = "2026-05-23"
+// Verify floating holidays (Islamic, Hindu lunar, Chinese lunar) against an
+// official calendar each year and update this constant when you do.
+const val HOLIDAYS_LAST_UPDATED = "2026-06-03"
 
-// ── 2026 ──────────────────────────────────────────────────────────────────────
-// Irish public holidays: fixed dates + computed floating dates
-// Easter 2026: Sunday Apr 5  (computed via Gregorian algorithm)
-// Indian public holidays: Embassy in New Delhi closes on these in addition to Irish ones.
-// Islamic/Hindu dates are approximate — verify before each year begins.
-val HOLIDAYS_2026: Set<LocalDate> = setOf(
-    // ── Irish ────────────────────────────────────────────────────────────────
+// ── Irish public holidays (shared base for all embassies) ─────────────────────
+
+private val IRISH_2026: Set<LocalDate> = setOf(
     LocalDate.of(2026, 1, 1),   // New Year's Day
-    LocalDate.of(2026, 2, 2),   // St. Brigid's Day (first Mon in Feb)
+    LocalDate.of(2026, 2, 2),   // St. Brigid's Day
     LocalDate.of(2026, 3, 17),  // St. Patrick's Day
-    LocalDate.of(2026, 4, 3),   // Good Friday (embassy observes)
+    LocalDate.of(2026, 4, 3),   // Good Friday
     LocalDate.of(2026, 4, 6),   // Easter Monday
-    LocalDate.of(2026, 5, 4),   // May Bank Holiday (first Mon in May)
-    LocalDate.of(2026, 6, 1),   // June Bank Holiday (first Mon in Jun)
-    LocalDate.of(2026, 8, 3),   // August Bank Holiday (first Mon in Aug)
-    LocalDate.of(2026, 10, 26), // October Bank Holiday (last Mon in Oct)
+    LocalDate.of(2026, 5, 4),   // May Bank Holiday
+    LocalDate.of(2026, 6, 1),   // June Bank Holiday
+    LocalDate.of(2026, 8, 3),   // August Bank Holiday
+    LocalDate.of(2026, 10, 26), // October Bank Holiday
     LocalDate.of(2026, 12, 25), // Christmas Day
     LocalDate.of(2026, 12, 26), // St. Stephen's Day
+)
 
-    // ── Indian ───────────────────────────────────────────────────────────────
+private val IRISH_2027: Set<LocalDate> = setOf(
+    LocalDate.of(2027, 1, 1),
+    LocalDate.of(2027, 2, 1),   // St. Brigid's Day
+    LocalDate.of(2027, 3, 17),
+    LocalDate.of(2027, 3, 26),  // Good Friday
+    LocalDate.of(2027, 3, 29),  // Easter Monday
+    LocalDate.of(2027, 5, 3),
+    LocalDate.of(2027, 6, 7),
+    LocalDate.of(2027, 8, 2),
+    LocalDate.of(2027, 10, 25),
+    LocalDate.of(2027, 12, 25),
+    LocalDate.of(2027, 12, 26),
+    LocalDate.of(2027, 12, 27), // Christmas substitute (Mon)
+    LocalDate.of(2027, 12, 28), // St. Stephen's substitute (Mon)
+)
+
+private val IRISH = IRISH_2026 + IRISH_2027
+
+// ── India (Embassy: New Delhi) ────────────────────────────────────────────────
+
+private val INDIA_2026: Set<LocalDate> = setOf(
     LocalDate.of(2026, 1, 26),  // Republic Day
-    LocalDate.of(2026, 3, 4),   // Holi (~Phalguna Purnima; verify)
-    LocalDate.of(2026, 3, 20),  // Eid-ul-Fitr (~end of Ramadan; verify)
-    LocalDate.of(2026, 5, 11),  // Buddha Purnima (~Vaishakha Purnima; verify)
-    LocalDate.of(2026, 5, 27),  // Eid-ul-Adha / Bakrid (verify)
+    LocalDate.of(2026, 3, 4),   // Holi (verify)
+    LocalDate.of(2026, 3, 20),  // Eid-ul-Fitr (verify)
+    LocalDate.of(2026, 5, 11),  // Buddha Purnima (verify)
+    LocalDate.of(2026, 5, 27),  // Eid-ul-Adha (verify)
     LocalDate.of(2026, 8, 15),  // Independence Day
     LocalDate.of(2026, 8, 16),  // Janmashtami (verify)
     LocalDate.of(2026, 8, 28),  // Raksha Bandhan (verify)
     LocalDate.of(2026, 10, 2),  // Gandhi Jayanti
-    LocalDate.of(2026, 10, 20), // Dussehra / Vijayadashami (verify)
+    LocalDate.of(2026, 10, 20), // Dussehra (verify)
     LocalDate.of(2026, 11, 8),  // Diwali (verify)
     LocalDate.of(2026, 11, 23), // Guru Nanak Jayanti (verify)
 )
 
-// ── 2027 ──────────────────────────────────────────────────────────────────────
-// Easter 2027: Sunday Mar 28  (computed via Gregorian algorithm)
-// Dec 25 falls on Saturday → Dec 27 Monday observed; Dec 26 Sun → Dec 28 Mon observed.
-val HOLIDAYS_2027: Set<LocalDate> = setOf(
-    // ── Irish ────────────────────────────────────────────────────────────────
-    LocalDate.of(2027, 1, 1),   // New Year's Day
-    LocalDate.of(2027, 2, 1),   // St. Brigid's Day (first Mon in Feb)
-    LocalDate.of(2027, 3, 17),  // St. Patrick's Day
-    LocalDate.of(2027, 3, 26),  // Good Friday
-    LocalDate.of(2027, 3, 29),  // Easter Monday
-    LocalDate.of(2027, 5, 3),   // May Bank Holiday (first Mon in May)
-    LocalDate.of(2027, 6, 7),   // June Bank Holiday (first Mon in Jun)
-    LocalDate.of(2027, 8, 2),   // August Bank Holiday (first Mon in Aug)
-    LocalDate.of(2027, 10, 25), // October Bank Holiday (last Mon in Oct)
-    LocalDate.of(2027, 12, 25), // Christmas Day (Sat — weekend, but listed)
-    LocalDate.of(2027, 12, 26), // St. Stephen's Day (Sun — weekend, but listed)
-    LocalDate.of(2027, 12, 27), // Christmas substitute (Mon)
-    LocalDate.of(2027, 12, 28), // St. Stephen's substitute (Mon)
-
-    // ── Indian ───────────────────────────────────────────────────────────────
-    LocalDate.of(2027, 1, 26),  // Republic Day
+private val INDIA_2027: Set<LocalDate> = setOf(
+    LocalDate.of(2027, 1, 26),
     LocalDate.of(2027, 3, 9),   // Eid-ul-Fitr (verify)
     LocalDate.of(2027, 3, 22),  // Holi (verify)
     LocalDate.of(2027, 5, 1),   // Buddha Purnima (verify)
-    LocalDate.of(2027, 5, 16),  // Eid-ul-Adha / Bakrid (verify)
+    LocalDate.of(2027, 5, 16),  // Eid-ul-Adha (verify)
     LocalDate.of(2027, 8, 5),   // Janmashtami (verify)
-    LocalDate.of(2027, 8, 15),  // Independence Day
+    LocalDate.of(2027, 8, 15),
     LocalDate.of(2027, 8, 17),  // Raksha Bandhan (verify)
-    LocalDate.of(2027, 10, 2),  // Gandhi Jayanti
-    LocalDate.of(2027, 10, 9),  // Dussehra / Vijayadashami (verify)
+    LocalDate.of(2027, 10, 2),
+    LocalDate.of(2027, 10, 9),  // Dussehra (verify)
     LocalDate.of(2027, 10, 28), // Diwali (verify)
     LocalDate.of(2027, 11, 12), // Guru Nanak Jayanti (verify)
 )
 
-val ALL_HOLIDAYS: Set<LocalDate> = HOLIDAYS_2026 + HOLIDAYS_2027
+val INDIA_HOLIDAYS: Set<LocalDate> = IRISH + INDIA_2026 + INDIA_2027
+
+// ── Russia (Embassy: Moscow) ──────────────────────────────────────────────────
+
+private val RUSSIA_2026: Set<LocalDate> = setOf(
+    LocalDate.of(2026, 1, 2),   // New Year holiday block
+    LocalDate.of(2026, 1, 3),
+    LocalDate.of(2026, 1, 4),
+    LocalDate.of(2026, 1, 5),
+    LocalDate.of(2026, 1, 6),
+    LocalDate.of(2026, 1, 7),   // Orthodox Christmas
+    LocalDate.of(2026, 1, 8),
+    LocalDate.of(2026, 2, 23),  // Defender of the Fatherland Day
+    LocalDate.of(2026, 3, 8),   // International Women's Day
+    LocalDate.of(2026, 5, 1),   // Spring and Labour Day
+    LocalDate.of(2026, 5, 9),   // Victory Day
+    LocalDate.of(2026, 6, 12),  // Russia Day
+    LocalDate.of(2026, 11, 4),  // National Unity Day
+)
+
+private val RUSSIA_2027: Set<LocalDate> = setOf(
+    LocalDate.of(2027, 1, 2),
+    LocalDate.of(2027, 1, 3),
+    LocalDate.of(2027, 1, 4),
+    LocalDate.of(2027, 1, 5),
+    LocalDate.of(2027, 1, 6),
+    LocalDate.of(2027, 1, 7),   // Orthodox Christmas
+    LocalDate.of(2027, 1, 8),
+    LocalDate.of(2027, 2, 23),
+    LocalDate.of(2027, 3, 8),
+    LocalDate.of(2027, 5, 1),
+    LocalDate.of(2027, 5, 9),
+    LocalDate.of(2027, 6, 12),
+    LocalDate.of(2027, 11, 4),
+)
+
+val RUSSIA_HOLIDAYS: Set<LocalDate> = IRISH + RUSSIA_2026 + RUSSIA_2027
+
+// ── UK (Embassy: London) — England & Wales bank holidays ─────────────────────
+
+private val UK_2026: Set<LocalDate> = setOf(
+    LocalDate.of(2026, 1, 1),
+    LocalDate.of(2026, 4, 3),   // Good Friday
+    LocalDate.of(2026, 4, 6),   // Easter Monday
+    LocalDate.of(2026, 5, 4),   // Early May Bank Holiday
+    LocalDate.of(2026, 5, 25),  // Spring Bank Holiday (last Mon May)
+    LocalDate.of(2026, 8, 31),  // Summer Bank Holiday (last Mon Aug)
+    LocalDate.of(2026, 12, 25),
+    LocalDate.of(2026, 12, 26), // Boxing Day
+)
+
+private val UK_2027: Set<LocalDate> = setOf(
+    LocalDate.of(2027, 1, 1),
+    LocalDate.of(2027, 3, 26),  // Good Friday
+    LocalDate.of(2027, 3, 29),  // Easter Monday
+    LocalDate.of(2027, 5, 3),   // Early May Bank Holiday
+    LocalDate.of(2027, 5, 31),  // Spring Bank Holiday
+    LocalDate.of(2027, 8, 30),  // Summer Bank Holiday
+    LocalDate.of(2027, 12, 27), // Christmas substitute
+    LocalDate.of(2027, 12, 28), // Boxing Day substitute
+)
+
+val UK_HOLIDAYS: Set<LocalDate> = IRISH + UK_2026 + UK_2027
+
+// ── China (Embassy: Beijing) ──────────────────────────────────────────────────
+// Spring Festival, Dragon Boat, Mid-Autumn dates are approximate — verify each year.
+
+private val CHINA_2026: Set<LocalDate> = setOf(
+    LocalDate.of(2026, 1, 1),
+    // Spring Festival (~Feb 17 — verify exact adjustment dates)
+    LocalDate.of(2026, 2, 15),
+    LocalDate.of(2026, 2, 16),
+    LocalDate.of(2026, 2, 17),
+    LocalDate.of(2026, 2, 18),
+    LocalDate.of(2026, 2, 19),
+    LocalDate.of(2026, 2, 20),
+    LocalDate.of(2026, 2, 21),
+    // Qingming (Tomb-Sweeping) Festival
+    LocalDate.of(2026, 4, 4),
+    LocalDate.of(2026, 4, 5),
+    LocalDate.of(2026, 4, 6),
+    // Labour Day Golden Week
+    LocalDate.of(2026, 5, 1),
+    LocalDate.of(2026, 5, 2),
+    LocalDate.of(2026, 5, 3),
+    LocalDate.of(2026, 5, 4),
+    LocalDate.of(2026, 5, 5),
+    // Dragon Boat Festival (~Jun 19, verify)
+    LocalDate.of(2026, 6, 19),
+    LocalDate.of(2026, 6, 20),
+    LocalDate.of(2026, 6, 21),
+    // National Day / Mid-Autumn Golden Week
+    LocalDate.of(2026, 10, 1),
+    LocalDate.of(2026, 10, 2),
+    LocalDate.of(2026, 10, 3),
+    LocalDate.of(2026, 10, 4),
+    LocalDate.of(2026, 10, 5),
+    LocalDate.of(2026, 10, 6),
+    LocalDate.of(2026, 10, 7),
+)
+
+private val CHINA_2027: Set<LocalDate> = setOf(
+    LocalDate.of(2027, 1, 1),
+    // Spring Festival (~Feb 6, verify)
+    LocalDate.of(2027, 2, 4),
+    LocalDate.of(2027, 2, 5),
+    LocalDate.of(2027, 2, 6),
+    LocalDate.of(2027, 2, 7),
+    LocalDate.of(2027, 2, 8),
+    LocalDate.of(2027, 2, 9),
+    LocalDate.of(2027, 2, 10),
+    // Qingming
+    LocalDate.of(2027, 4, 4),
+    LocalDate.of(2027, 4, 5),
+    LocalDate.of(2027, 4, 6),
+    // Labour Day
+    LocalDate.of(2027, 5, 1),
+    LocalDate.of(2027, 5, 2),
+    LocalDate.of(2027, 5, 3),
+    // Dragon Boat Festival (~Jun 8, verify)
+    LocalDate.of(2027, 6, 8),
+    LocalDate.of(2027, 6, 9),
+    LocalDate.of(2027, 6, 10),
+    // National Day
+    LocalDate.of(2027, 10, 1),
+    LocalDate.of(2027, 10, 2),
+    LocalDate.of(2027, 10, 3),
+    LocalDate.of(2027, 10, 4),
+    LocalDate.of(2027, 10, 5),
+    LocalDate.of(2027, 10, 6),
+    LocalDate.of(2027, 10, 7),
+)
+
+val CHINA_HOLIDAYS: Set<LocalDate> = IRISH + CHINA_2026 + CHINA_2027
+
+// ── Turkey (Embassy: Ankara) ──────────────────────────────────────────────────
+// Eid dates are approximate — verify each year.
+
+private val TURKEY_2026: Set<LocalDate> = setOf(
+    LocalDate.of(2026, 1, 1),
+    LocalDate.of(2026, 3, 20),  // Eid al-Fitr Day 1 (verify)
+    LocalDate.of(2026, 3, 21),
+    LocalDate.of(2026, 3, 22),
+    LocalDate.of(2026, 4, 23),  // National Sovereignty & Children's Day
+    LocalDate.of(2026, 5, 1),   // Labour Day
+    LocalDate.of(2026, 5, 19),  // Atatürk Commemoration Day
+    LocalDate.of(2026, 5, 27),  // Eid al-Adha Day 1 (verify)
+    LocalDate.of(2026, 5, 28),
+    LocalDate.of(2026, 5, 29),
+    LocalDate.of(2026, 5, 30),
+    LocalDate.of(2026, 7, 15),  // Democracy and National Unity Day
+    LocalDate.of(2026, 8, 30),  // Victory Day
+    LocalDate.of(2026, 10, 29), // Republic Day
+)
+
+private val TURKEY_2027: Set<LocalDate> = setOf(
+    LocalDate.of(2027, 1, 1),
+    LocalDate.of(2027, 3, 9),   // Eid al-Fitr Day 1 (verify)
+    LocalDate.of(2027, 3, 10),
+    LocalDate.of(2027, 3, 11),
+    LocalDate.of(2027, 4, 23),
+    LocalDate.of(2027, 5, 1),
+    LocalDate.of(2027, 5, 16),  // Eid al-Adha Day 1 (verify)
+    LocalDate.of(2027, 5, 17),
+    LocalDate.of(2027, 5, 18),
+    LocalDate.of(2027, 5, 19),  // Atatürk Day (may coincide)
+    LocalDate.of(2027, 7, 15),
+    LocalDate.of(2027, 8, 30),
+    LocalDate.of(2027, 10, 29),
+)
+
+val TURKEY_HOLIDAYS: Set<LocalDate> = IRISH + TURKEY_2026 + TURKEY_2027
+
+// ── UAE (Embassy: Abu Dhabi) ──────────────────────────────────────────────────
+// Islamic holiday dates are approximate — verify each year.
+
+private val UAE_2026: Set<LocalDate> = setOf(
+    LocalDate.of(2026, 1, 1),
+    LocalDate.of(2026, 3, 20),  // Eid al-Fitr Day 1 (verify)
+    LocalDate.of(2026, 3, 21),
+    LocalDate.of(2026, 3, 22),
+    LocalDate.of(2026, 5, 26),  // Arafat Day (verify)
+    LocalDate.of(2026, 5, 27),  // Eid al-Adha Day 1 (verify)
+    LocalDate.of(2026, 5, 28),
+    LocalDate.of(2026, 5, 29),
+    LocalDate.of(2026, 6, 16),  // Islamic New Year (verify)
+    LocalDate.of(2026, 8, 25),  // Prophet's Birthday (verify)
+    LocalDate.of(2026, 12, 2),  // UAE National Day
+    LocalDate.of(2026, 12, 3),
+)
+
+private val UAE_2027: Set<LocalDate> = setOf(
+    LocalDate.of(2027, 1, 1),
+    LocalDate.of(2027, 3, 9),   // Eid al-Fitr Day 1 (verify)
+    LocalDate.of(2027, 3, 10),
+    LocalDate.of(2027, 3, 11),
+    LocalDate.of(2027, 5, 15),  // Arafat Day (verify)
+    LocalDate.of(2027, 5, 16),  // Eid al-Adha Day 1 (verify)
+    LocalDate.of(2027, 5, 17),
+    LocalDate.of(2027, 5, 18),
+    LocalDate.of(2027, 6, 5),   // Islamic New Year (verify)
+    LocalDate.of(2027, 8, 14),  // Prophet's Birthday (verify)
+    LocalDate.of(2027, 12, 2),
+    LocalDate.of(2027, 12, 3),
+)
+
+val UAE_HOLIDAYS: Set<LocalDate> = IRISH + UAE_2026 + UAE_2027
+
+// ── Pakistan (Embassy: Islamabad) ─────────────────────────────────────────────
+// Islamic holiday dates are approximate — verify each year.
+
+private val PAKISTAN_2026: Set<LocalDate> = setOf(
+    LocalDate.of(2026, 2, 5),   // Kashmir Solidarity Day
+    LocalDate.of(2026, 3, 20),  // Eid ul-Fitr Day 1 (verify)
+    LocalDate.of(2026, 3, 21),
+    LocalDate.of(2026, 3, 22),
+    LocalDate.of(2026, 3, 23),  // Pakistan Day
+    LocalDate.of(2026, 5, 1),   // Labour Day
+    LocalDate.of(2026, 5, 27),  // Eid ul-Adha Day 1 (verify)
+    LocalDate.of(2026, 5, 28),
+    LocalDate.of(2026, 5, 29),
+    LocalDate.of(2026, 8, 14),  // Independence Day
+    LocalDate.of(2026, 9, 6),   // Defence Day
+    LocalDate.of(2026, 11, 9),  // Iqbal Day
+    LocalDate.of(2026, 12, 25), // Quaid-e-Azam Day / Christmas
+)
+
+private val PAKISTAN_2027: Set<LocalDate> = setOf(
+    LocalDate.of(2027, 2, 5),
+    LocalDate.of(2027, 3, 9),   // Eid ul-Fitr Day 1 (verify)
+    LocalDate.of(2027, 3, 10),
+    LocalDate.of(2027, 3, 11),
+    LocalDate.of(2027, 3, 23),  // Pakistan Day
+    LocalDate.of(2027, 5, 1),
+    LocalDate.of(2027, 5, 16),  // Eid ul-Adha Day 1 (verify)
+    LocalDate.of(2027, 5, 17),
+    LocalDate.of(2027, 5, 18),
+    LocalDate.of(2027, 8, 14),
+    LocalDate.of(2027, 9, 6),
+    LocalDate.of(2027, 11, 9),
+    LocalDate.of(2027, 12, 25),
+)
+
+val PAKISTAN_HOLIDAYS: Set<LocalDate> = IRISH + PAKISTAN_2026 + PAKISTAN_2027
+
+// ── Backward compatibility ────────────────────────────────────────────────────
+// WorkingDays functions default to this set; unit tests rely on India + Irish holidays.
+val ALL_HOLIDAYS: Set<LocalDate> = INDIA_HOLIDAYS
