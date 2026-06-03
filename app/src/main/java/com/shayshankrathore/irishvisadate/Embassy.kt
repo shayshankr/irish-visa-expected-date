@@ -41,7 +41,7 @@ val EMBASSY_MOSCOW = Embassy(
         VacOption("Other CIS", "Nur-Sultan / Tashkent / Bishkek / Dushanbe", 3),
     ),
     holidays = RUSSIA_HOLIDAYS,
-    decisionsUrl = "https://www.ireland.ie/en/russia/moscow/services/visas/",
+    decisionsUrl = "https://www.irishimmigration.ie",
     courierNote = "Plus ~3–5 working days for return courier from Irish Embassy Moscow",
 )
 
@@ -54,7 +54,7 @@ val EMBASSY_LONDON = Embassy(
         VacOption("Other UK", "Manchester / Edinburgh / Birmingham / Belfast", 2),
     ),
     holidays = UK_HOLIDAYS,
-    decisionsUrl = "https://www.ireland.ie/en/gb/london/services/visas/",
+    decisionsUrl = "https://www.irishimmigration.ie",
     courierNote = "Plus ~2–3 working days for return courier from Irish Embassy London",
 )
 
@@ -81,7 +81,7 @@ val EMBASSY_ANKARA = Embassy(
         VacOption("Istanbul", "Istanbul", 2),
     ),
     holidays = TURKEY_HOLIDAYS,
-    decisionsUrl = "https://www.ireland.ie/en/turkey/ankara/services/visas/",
+    decisionsUrl = "https://www.irishimmigration.ie",
     courierNote = "Plus ~2–3 working days for return courier from Irish Embassy Ankara",
 )
 
