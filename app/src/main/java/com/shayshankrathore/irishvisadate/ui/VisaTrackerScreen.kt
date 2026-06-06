@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shayshankrathore.irishvisadate.ALL_EMBASSIES
+import com.shayshankrathore.irishvisadate.AppPreferences
 import com.shayshankrathore.irishvisadate.Embassy
 import com.shayshankrathore.irishvisadate.JOIN_FAMILY_MAX_DAYS
 import com.shayshankrathore.irishvisadate.JOIN_FAMILY_MIN_DAYS
@@ -91,7 +92,7 @@ private fun DrawScope.drawHarp(alpha: Float = 0.13f) {
 
 // ── Header ────────────────────────────────────────────────────────────────────
 @Composable
-private fun IrishHeader() {
+private fun IrishHeader(onHelpClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -137,6 +138,19 @@ private fun IrishHeader() {
                         letterSpacing = 0.2.sp,
                     )
                 }
+
+                Spacer(Modifier.weight(1f))
+
+                Surface(
+                    onClick = onHelpClick,
+                    shape = RoundedCornerShape(9.dp),
+                    color = Color.White.copy(alpha = 0.18f),
+                    modifier = Modifier.size(34.dp),
+                ) {
+                    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                        Text("?", color = Color.White, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
+                    }
+                }
             }
 
             Row(modifier = Modifier.fillMaxWidth().height(5.dp)) {
@@ -163,10 +177,50 @@ fun VisaTrackerScreen(onNavigate: (AppScreen) -> Unit) {
     var visaType        by remember { mutableStateOf(VisaType.SHORT_STAY) }
     var showDatePicker  by remember { mutableStateOf(false) }
     var embassyExpanded by remember { mutableStateOf(false) }
+    var showHowToUse    by remember { mutableStateOf(false) }
+    var stateRestored   by remember { mutableStateOf(false) }
 
-    val sheetState     = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    var showNoDecision by remember { mutableStateOf(false) }
-    val scope          = rememberCoroutineScope()
+    val prefFlow   = remember(context) { AppPreferences.flow(context) }
+    val savedState by prefFlow.collectAsState(initial = null)
+
+    // Restore persisted state once on first load
+    LaunchedEffect(savedState) {
+        if (!stateRestored && savedState != null) {
+            savedState!!.embassyId?.let { id ->
+                ALL_EMBASSIES.find { it.id == id }?.also { embassy ->
+                    selectedEmbassy = embassy
+                    savedState!!.vacLabel?.let { label ->
+                        embassy.vacOptions.find { it.label == label }?.let { selectedVac = it }
+                    }
+                }
+            }
+            savedState!!.submissionDate?.let { dateStr ->
+                runCatching { LocalDate.parse(dateStr) }.getOrNull()?.let { submissionDate = it }
+            }
+            savedState!!.visaTypeName?.let { name ->
+                runCatching { VisaType.valueOf(name) }.getOrNull()?.let { visaType = it }
+            }
+            stateRestored = true
+        }
+    }
+
+    // Persist state whenever the user changes anything
+    LaunchedEffect(selectedEmbassy, selectedVac, submissionDate, visaType) {
+        if (stateRestored) {
+            AppPreferences.save(
+                context        = context,
+                embassyId      = selectedEmbassy.id,
+                vacLabel       = selectedVac.label,
+                submissionDate = submissionDate?.toString(),
+                visaTypeName   = visaType.name,
+            )
+        }
+    }
+
+    val sheetState          = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val howToUseSheetState  = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var showNoDecision      by remember { mutableStateOf(false) }
+    val scope               = rememberCoroutineScope()
 
     val pickerState = rememberDatePickerState(
         initialSelectedDateMillis = submissionDate
@@ -220,9 +274,33 @@ fun VisaTrackerScreen(onNavigate: (AppScreen) -> Unit) {
         }
     }
 
+    if (showHowToUse) {
+        ModalBottomSheet(
+            onDismissRequest = { showHowToUse = false },
+            sheetState = howToUseSheetState,
+            containerColor = SurfaceCard,
+            dragHandle = {
+                Box(
+                    modifier = Modifier
+                        .padding(vertical = 12.dp)
+                        .size(width = 40.dp, height = 4.dp)
+                        .background(DividerGreen, RoundedCornerShape(2.dp))
+                )
+            }
+        ) {
+            HowToUseSheet(
+                onClose = {
+                    scope.launch { howToUseSheetState.hide() }.invokeOnCompletion {
+                        showHowToUse = false
+                    }
+                }
+            )
+        }
+    }
+
     Scaffold(
         containerColor = IrishGreenBg,
-        topBar = { IrishHeader() },
+        topBar = { IrishHeader(onHelpClick = { showHowToUse = true }) },
     ) { inner ->
         Column(
             modifier = Modifier
@@ -404,9 +482,10 @@ fun VisaTrackerScreen(onNavigate: (AppScreen) -> Unit) {
                 val submission     = submissionDate!!
                 val holidays       = selectedEmbassy.holidays
                 val transit        = selectedVac.transitDays
-                val embassyReceive = submission.addWorkingDays(transit, holidays)
-                val earliest       = embassyReceive.addWorkingDays(visaType.minDays, holidays)
-                val latest         = embassyReceive.addWorkingDays(visaType.maxDays, holidays)
+                val embassyReceive    = submission.addWorkingDays(transit, holidays)
+                val earliest         = embassyReceive.addWorkingDays(visaType.minDays, holidays)
+                val latest           = embassyReceive.addWorkingDays(visaType.maxDays, holidays)
+                val passportReturn   = latest.addWorkingDays(selectedEmbassy.courierDays, holidays)
 
                 val windowDays    = workingDaysBetween(earliest, latest, holidays)
                 val elapsed       = workingDaysBetween(earliest, today, holidays).coerceAtLeast(0L)
@@ -427,6 +506,8 @@ fun VisaTrackerScreen(onNavigate: (AppScreen) -> Unit) {
                     isBeforeWindow = isBeforeWindow, isOverdue = isOverdue,
                     isInWindow = isInWindow, transit = transit,
                     courierNote = selectedEmbassy.courierNote,
+                    passportReturnDate = passportReturn,
+                    courierDays = selectedEmbassy.courierDays,
                 )
 
                 // ── Status update ─────────────────────────────────────────
@@ -486,6 +567,7 @@ private fun DecisionWindowCard(
     elapsedSub: Long, windowProgress: Float,
     isBeforeWindow: Boolean, isOverdue: Boolean, isInWindow: Boolean,
     transit: Int, courierNote: String,
+    passportReturnDate: LocalDate, courierDays: Int,
 ) {
     val bgGradient = when {
         isOverdue  -> Brush.linearGradient(listOf(Color(0xFFFFF8E1), Color(0xFFFFECB3)))
@@ -543,7 +625,29 @@ private fun DecisionWindowCard(
                 color = TextHint,
             )
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(14.dp))
+            HorizontalDivider(color = DividerGreen, thickness = 1.dp)
+            Spacer(Modifier.height(12.dp))
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("📬", fontSize = 15.sp)
+                Spacer(Modifier.width(8.dp))
+                Column {
+                    Text(
+                        text = "Passport back by ~${passportReturnDate.fmt()}",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        color = IrishGreenDark,
+                    )
+                    Text(
+                        text = "(includes $courierDays working day${plural(courierDays.toLong())} courier return)",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = TextHint,
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(14.dp))
 
             Box(
                 modifier = Modifier.fillMaxWidth().height(10.dp)
@@ -663,6 +767,59 @@ internal fun AccentCard(
                 Spacer(Modifier.height(10.dp))
                 content()
             }
+        }
+    }
+}
+
+// ── How to use sheet ─────────────────────────────────────────────────────────
+@Composable
+private fun HowToUseSheet(onClose: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 24.dp)
+            .padding(bottom = 36.dp),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text("ℹ️", fontSize = 26.sp)
+            Spacer(Modifier.width(10.dp))
+            Text(
+                "How to Use",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.ExtraBold,
+                color = IrishGreenDark,
+            )
+        }
+        Spacer(Modifier.height(10.dp))
+        HorizontalDivider(color = DividerGreen)
+        Spacer(Modifier.height(16.dp))
+
+        HowToStep("🌍", "Select your embassy", "Choose the Irish Embassy that processes applications for your country.")
+        HowToStep("📅", "Enter submission date", "Pick the date you lodged your documents at the VAC.")
+        HowToStep("📍", "Choose VAC location", "Select your city — transit days to the embassy vary by location.")
+        HowToStep("🛂", "Select visa type", "Short Stay (C), Study (D), or Join Family (D).")
+        HowToStep("🗓", "View decision window", "See your earliest and latest expected dates, with weekends and public holidays factored in.")
+        HowToStep("🔔", "Record your outcome", "Once you hear back, tap Granted, Refused, or No Decision Yet.")
+
+        Spacer(Modifier.height(20.dp))
+        TextButton(
+            onClick = onClose,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.textButtonColors(contentColor = TextSecondary),
+        ) { Text("Close", fontWeight = FontWeight.SemiBold) }
+    }
+}
+
+@Composable
+private fun HowToStep(emoji: String, title: String, desc: String) {
+    Row(
+        modifier = Modifier.padding(vertical = 8.dp),
+        verticalAlignment = Alignment.Top,
+    ) {
+        Text(emoji, fontSize = 20.sp)
+        Spacer(Modifier.width(12.dp))
+        Column {
+            Text(title, fontWeight = FontWeight.SemiBold, color = IrishGreenDark, fontSize = 14.sp)
+            Text(desc, style = MaterialTheme.typography.bodySmall, color = TextSecondary)
         }
     }
 }

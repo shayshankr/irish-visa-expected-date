@@ -4,7 +4,7 @@ import java.time.LocalDate
 
 // Verify floating holidays (Islamic, Hindu lunar, Chinese lunar) against an
 // official calendar each year and update this constant when you do.
-const val HOLIDAYS_LAST_UPDATED = "2026-06-03"
+const val HOLIDAYS_LAST_UPDATED = "2026-06-06"
 
 // ── Irish public holidays (shared base for all embassies) ─────────────────────
 
@@ -316,6 +316,211 @@ private val PAKISTAN_2027: Set<LocalDate> = setOf(
 )
 
 val PAKISTAN_HOLIDAYS: Set<LocalDate> = IRISH + PAKISTAN_2026 + PAKISTAN_2027
+
+// ── Germany (Embassy: Berlin) — federal public holidays ──────────────────────
+
+private val GERMANY_2026: Set<LocalDate> = setOf(
+    LocalDate.of(2026, 1, 1),   // New Year's Day
+    LocalDate.of(2026, 4, 3),   // Good Friday
+    LocalDate.of(2026, 4, 6),   // Easter Monday
+    LocalDate.of(2026, 5, 1),   // Labour Day
+    LocalDate.of(2026, 5, 14),  // Ascension Day (Christi Himmelfahrt)
+    LocalDate.of(2026, 5, 25),  // Whit Monday (Pfingstmontag)
+    LocalDate.of(2026, 10, 3),  // Day of German Unity
+    LocalDate.of(2026, 12, 25),
+    LocalDate.of(2026, 12, 26), // Second Christmas Day
+)
+
+private val GERMANY_2027: Set<LocalDate> = setOf(
+    LocalDate.of(2027, 1, 1),
+    LocalDate.of(2027, 3, 26),  // Good Friday
+    LocalDate.of(2027, 3, 29),  // Easter Monday
+    LocalDate.of(2027, 5, 1),   // Labour Day
+    LocalDate.of(2027, 5, 6),   // Ascension Day
+    LocalDate.of(2027, 5, 17),  // Whit Monday
+    LocalDate.of(2027, 10, 3),  // Day of German Unity
+    LocalDate.of(2027, 12, 25),
+    LocalDate.of(2027, 12, 26),
+)
+
+val GERMANY_HOLIDAYS: Set<LocalDate> = IRISH + GERMANY_2026 + GERMANY_2027
+
+// ── France (Embassy: Paris) ───────────────────────────────────────────────────
+
+private val FRANCE_2026: Set<LocalDate> = setOf(
+    LocalDate.of(2026, 1, 1),   // New Year's Day
+    LocalDate.of(2026, 4, 6),   // Easter Monday
+    LocalDate.of(2026, 5, 1),   // Fête du Travail
+    LocalDate.of(2026, 5, 8),   // Victoire 1945 (VE Day)
+    LocalDate.of(2026, 5, 14),  // Ascension Day
+    LocalDate.of(2026, 5, 25),  // Whit Monday (Lundi de Pentecôte)
+    LocalDate.of(2026, 7, 14),  // Bastille Day
+    LocalDate.of(2026, 8, 15),  // Assumption of Mary
+    LocalDate.of(2026, 11, 1),  // All Saints' Day (Toussaint)
+    LocalDate.of(2026, 11, 11), // Armistice Day
+    LocalDate.of(2026, 12, 25),
+)
+
+private val FRANCE_2027: Set<LocalDate> = setOf(
+    LocalDate.of(2027, 1, 1),
+    LocalDate.of(2027, 3, 29),  // Easter Monday
+    LocalDate.of(2027, 5, 1),
+    LocalDate.of(2027, 5, 6),   // Ascension Day
+    LocalDate.of(2027, 5, 8),
+    LocalDate.of(2027, 5, 17),  // Whit Monday
+    LocalDate.of(2027, 7, 14),
+    LocalDate.of(2027, 8, 15),
+    LocalDate.of(2027, 11, 1),
+    LocalDate.of(2027, 11, 11),
+    LocalDate.of(2027, 12, 25),
+)
+
+val FRANCE_HOLIDAYS: Set<LocalDate> = IRISH + FRANCE_2026 + FRANCE_2027
+
+// ── Nigeria (Embassy: Abuja) ──────────────────────────────────────────────────
+// Islamic holiday dates are approximate — verify each year.
+
+private val NIGERIA_2026: Set<LocalDate> = setOf(
+    LocalDate.of(2026, 1, 1),   // New Year's Day
+    LocalDate.of(2026, 3, 20),  // Eid al-Fitr Day 1 (verify)
+    LocalDate.of(2026, 3, 21),  // Eid al-Fitr Day 2
+    LocalDate.of(2026, 4, 3),   // Good Friday
+    LocalDate.of(2026, 4, 6),   // Easter Monday
+    LocalDate.of(2026, 5, 1),   // Workers' Day
+    LocalDate.of(2026, 5, 27),  // Eid al-Adha Day 1 (verify)
+    LocalDate.of(2026, 5, 28),  // Eid al-Adha Day 2
+    LocalDate.of(2026, 6, 12),  // Democracy Day
+    LocalDate.of(2026, 10, 1),  // Independence Day
+    LocalDate.of(2026, 12, 25),
+    LocalDate.of(2026, 12, 26), // Boxing Day
+)
+
+private val NIGERIA_2027: Set<LocalDate> = setOf(
+    LocalDate.of(2027, 1, 1),
+    LocalDate.of(2027, 3, 9),   // Eid al-Fitr Day 1 (verify)
+    LocalDate.of(2027, 3, 10),
+    LocalDate.of(2027, 3, 26),  // Good Friday
+    LocalDate.of(2027, 3, 29),  // Easter Monday
+    LocalDate.of(2027, 5, 1),
+    LocalDate.of(2027, 5, 16),  // Eid al-Adha Day 1 (verify)
+    LocalDate.of(2027, 5, 17),
+    LocalDate.of(2027, 6, 12),
+    LocalDate.of(2027, 10, 1),
+    LocalDate.of(2027, 12, 25),
+    LocalDate.of(2027, 12, 26),
+)
+
+val NIGERIA_HOLIDAYS: Set<LocalDate> = IRISH + NIGERIA_2026 + NIGERIA_2027
+
+// ── South Africa (Embassy: Pretoria) ─────────────────────────────────────────
+// Sunday holidays shift to Monday per the Public Holidays Act.
+
+private val SOUTH_AFRICA_2026: Set<LocalDate> = setOf(
+    LocalDate.of(2026, 1, 1),   // New Year's Day
+    LocalDate.of(2026, 3, 21),  // Human Rights Day (Saturday — no weekday impact)
+    LocalDate.of(2026, 4, 3),   // Good Friday
+    LocalDate.of(2026, 4, 6),   // Family Day (Easter Monday)
+    LocalDate.of(2026, 4, 27),  // Freedom Day
+    LocalDate.of(2026, 5, 1),   // Workers' Day
+    LocalDate.of(2026, 6, 16),  // Youth Day
+    LocalDate.of(2026, 8, 9),   // National Women's Day (Sunday)
+    LocalDate.of(2026, 8, 10),  // National Women's Day substitute (Monday)
+    LocalDate.of(2026, 9, 24),  // Heritage Day
+    LocalDate.of(2026, 12, 16), // Day of Reconciliation
+    LocalDate.of(2026, 12, 25),
+    LocalDate.of(2026, 12, 26), // Day of Goodwill
+)
+
+private val SOUTH_AFRICA_2027: Set<LocalDate> = setOf(
+    LocalDate.of(2027, 1, 1),
+    LocalDate.of(2027, 3, 21),  // Human Rights Day (Sunday)
+    LocalDate.of(2027, 3, 22),  // Human Rights Day substitute (Monday)
+    LocalDate.of(2027, 3, 26),  // Good Friday
+    LocalDate.of(2027, 3, 29),  // Family Day (Easter Monday)
+    LocalDate.of(2027, 4, 27),  // Freedom Day
+    LocalDate.of(2027, 5, 1),   // Workers' Day (Saturday)
+    LocalDate.of(2027, 5, 3),   // Workers' Day substitute (Monday)
+    LocalDate.of(2027, 6, 16),  // Youth Day
+    LocalDate.of(2027, 8, 9),   // National Women's Day
+    LocalDate.of(2027, 9, 24),  // Heritage Day
+    LocalDate.of(2027, 12, 16),
+    LocalDate.of(2027, 12, 25),
+    LocalDate.of(2027, 12, 26),
+)
+
+val SOUTH_AFRICA_HOLIDAYS: Set<LocalDate> = IRISH + SOUTH_AFRICA_2026 + SOUTH_AFRICA_2027
+
+// ── Philippines (Embassy: Manila) ─────────────────────────────────────────────
+
+private val PHILIPPINES_2026: Set<LocalDate> = setOf(
+    LocalDate.of(2026, 1, 1),   // New Year's Day
+    LocalDate.of(2026, 4, 2),   // Maundy Thursday
+    LocalDate.of(2026, 4, 3),   // Good Friday
+    LocalDate.of(2026, 4, 9),   // Araw ng Kagitingan (Day of Valor)
+    LocalDate.of(2026, 5, 1),   // Labour Day
+    LocalDate.of(2026, 6, 12),  // Independence Day
+    LocalDate.of(2026, 8, 31),  // National Heroes Day (last Monday of August)
+    LocalDate.of(2026, 11, 1),  // All Saints' Day
+    LocalDate.of(2026, 11, 30), // Bonifacio Day
+    LocalDate.of(2026, 12, 25),
+    LocalDate.of(2026, 12, 30), // Rizal Day
+)
+
+private val PHILIPPINES_2027: Set<LocalDate> = setOf(
+    LocalDate.of(2027, 1, 1),
+    LocalDate.of(2027, 3, 25),  // Maundy Thursday
+    LocalDate.of(2027, 3, 26),  // Good Friday
+    LocalDate.of(2027, 4, 9),   // Araw ng Kagitingan
+    LocalDate.of(2027, 5, 1),   // Labour Day (Saturday)
+    LocalDate.of(2027, 5, 3),   // Labour Day substitute (Monday)
+    LocalDate.of(2027, 6, 12),
+    LocalDate.of(2027, 8, 30),  // National Heroes Day (last Monday of August)
+    LocalDate.of(2027, 11, 1),
+    LocalDate.of(2027, 11, 30),
+    LocalDate.of(2027, 12, 25),
+    LocalDate.of(2027, 12, 30),
+)
+
+val PHILIPPINES_HOLIDAYS: Set<LocalDate> = IRISH + PHILIPPINES_2026 + PHILIPPINES_2027
+
+// ── Bangladesh (Embassy: Dhaka) ───────────────────────────────────────────────
+// Islamic holiday dates are approximate — verify each year.
+
+private val BANGLADESH_2026: Set<LocalDate> = setOf(
+    LocalDate.of(2026, 2, 21),  // International Mother Language Day
+    LocalDate.of(2026, 3, 17),  // Birth anniversary of Sheikh Mujibur Rahman
+    LocalDate.of(2026, 3, 20),  // Eid ul-Fitr Day 1 (verify)
+    LocalDate.of(2026, 3, 21),  // Eid ul-Fitr Day 2
+    LocalDate.of(2026, 3, 22),  // Eid ul-Fitr Day 3
+    LocalDate.of(2026, 3, 26),  // Independence Day
+    LocalDate.of(2026, 4, 14),  // Pahela Baishakh (Bengali New Year)
+    LocalDate.of(2026, 5, 1),   // May Day
+    LocalDate.of(2026, 5, 27),  // Eid ul-Adha Day 1 (verify)
+    LocalDate.of(2026, 5, 28),  // Eid ul-Adha Day 2
+    LocalDate.of(2026, 5, 29),  // Eid ul-Adha Day 3
+    LocalDate.of(2026, 8, 15),  // National Mourning Day
+    LocalDate.of(2026, 12, 16), // Victory Day
+    LocalDate.of(2026, 12, 25), // Christmas Day
+)
+
+private val BANGLADESH_2027: Set<LocalDate> = setOf(
+    LocalDate.of(2027, 2, 21),
+    LocalDate.of(2027, 3, 9),   // Eid ul-Fitr Day 1 (verify)
+    LocalDate.of(2027, 3, 10),
+    LocalDate.of(2027, 3, 11),
+    LocalDate.of(2027, 3, 17),
+    LocalDate.of(2027, 3, 26),
+    LocalDate.of(2027, 4, 14),
+    LocalDate.of(2027, 5, 1),
+    LocalDate.of(2027, 5, 16),  // Eid ul-Adha Day 1 (verify)
+    LocalDate.of(2027, 5, 17),
+    LocalDate.of(2027, 5, 18),
+    LocalDate.of(2027, 8, 15),
+    LocalDate.of(2027, 12, 16),
+    LocalDate.of(2027, 12, 25),
+)
+
+val BANGLADESH_HOLIDAYS: Set<LocalDate> = IRISH + BANGLADESH_2026 + BANGLADESH_2027
 
 // ── Backward compatibility ────────────────────────────────────────────────────
 // WorkingDays functions default to this set; unit tests rely on India + Irish holidays.

@@ -22,8 +22,8 @@ android {
         applicationId = "com.shayshankrathore.irishvisadate"
         minSdk = 24
         targetSdk = 36
-        versionCode = 11
-        versionName = "1.3.1"
+        versionCode = 12
+        versionName = "1.3.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.browser)
+    implementation(libs.androidx.datastore.preferences)
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
