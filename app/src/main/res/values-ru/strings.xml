@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">Irish Visa Expected Date</string>
+    <string name="widget_description">Показывает статус окна решения по визе Ирландии</string>
+
+    <!-- Section headers -->
+    <string name="section_embassy">🌍  ПОСОЛЬСТВО ИРЛАНДИИ</string>
+    <string name="section_submitted">📅  ДАТА ПОДАЧИ ЗАЯВКИ</string>
+    <string name="section_vac">📍  ВИЗОВЫЙ ЦЕНТР (VAC)</string>
+    <string name="section_visa_type">🛂  ТИП ВИЗЫ</string>
+    <string name="section_got_update">🔔  ПОЛУЧИЛИ ОТВЕТ?</string>
+    <string name="section_quick_actions">⚡  БЫСТРЫЕ ДЕЙСТВИЯ</string>
+
+    <!-- Buttons -->
+    <string name="btn_pick_date">Выбрать дату подачи</string>
+    <string name="btn_change_date">Изменить дату</string>
+    <string name="btn_visa_granted">✅  Визу одобрили!</string>
+    <string name="btn_visa_refused">❌  В визе отказали</string>
+    <string name="btn_no_decision">🕐  Решения пока нет</string>
+    <string name="btn_share">📤 Поделиться</string>
+    <string name="btn_calendar">📅 Календарь</string>
+    <string name="btn_checklist">📋 Чеклист</string>
+    <string name="btn_my_apps">📁 Мои заявки</string>
+    <string name="btn_save_application">💾  Сохранить заявку</string>
+    <string name="btn_open_decisions">🌐  Открыть список решений</string>
+    <string name="btn_back">← Назад</string>
+    <string name="btn_close">Закрыть</string>
+
+    <!-- Status messages -->
+    <string name="status_update_prompt">Сообщите о результате вашей заявки:</string>
+    <string name="decision_between">Ожидайте решение в период</string>
+    <string name="passport_back_by">Паспорт вернут ~%s</string>
+    <string name="overdue_message">Ваша заявка может задерживаться — напишите письмо в визовый отдел для уточнения статуса.</string>
+    <string name="no_apps_title">Сохранённых заявок нет</string>
+    <string name="no_apps_body">Используйте кнопку «Мои заявки» в трекере, чтобы сохранить текущую заявку.</string>
+
+    <!-- Screens -->
+    <string name="screen_checklist">Список документов</string>
+    <string name="screen_decisions">Решения по визам</string>
+    <string name="screen_my_applications">Мои заявки</string>
+    <string name="screen_visa_refused">Отказ в визе</string>
+</resources>

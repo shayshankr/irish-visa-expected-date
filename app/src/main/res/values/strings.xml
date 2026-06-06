@@ -1,3 +1,41 @@
 <resources>
     <string name="app_name">Irish Visa Expected Date</string>
+    <string name="widget_description">Shows your Irish visa decision window status</string>
+
+    <!-- Section headers -->
+    <string name="section_embassy">🌍  IRISH EMBASSY</string>
+    <string name="section_submitted">📅  APPLICATION SUBMITTED</string>
+    <string name="section_vac">📍  VISA APPLICATION CENTRE (VAC) LOCATION</string>
+    <string name="section_visa_type">🛂  VISA TYPE</string>
+    <string name="section_got_update">🔔  GOT AN UPDATE?</string>
+    <string name="section_quick_actions">⚡  QUICK ACTIONS</string>
+
+    <!-- Buttons -->
+    <string name="btn_pick_date">Pick submission date</string>
+    <string name="btn_change_date">Change date</string>
+    <string name="btn_visa_granted">✅  I got my visa!</string>
+    <string name="btn_visa_refused">❌  My visa was refused</string>
+    <string name="btn_no_decision">🕐  No decision yet</string>
+    <string name="btn_share">📤 Share</string>
+    <string name="btn_calendar">📅 Calendar</string>
+    <string name="btn_checklist">📋 Checklist</string>
+    <string name="btn_my_apps">📁 My Apps</string>
+    <string name="btn_save_application">💾  Save Application</string>
+    <string name="btn_open_decisions">🌐  Open Visa Decisions Page</string>
+    <string name="btn_back">← Back</string>
+    <string name="btn_close">Close</string>
+
+    <!-- Status messages -->
+    <string name="status_update_prompt">Let us know the outcome of your application:</string>
+    <string name="decision_between">Expect a decision between</string>
+    <string name="passport_back_by">Passport back by ~%s</string>
+    <string name="overdue_message">Your application may be overdue — email the Visa Office for a status update.</string>
+    <string name="no_apps_title">No saved applications yet</string>
+    <string name="no_apps_body">Use the \"My Apps\" button on the tracker\nto save your current application.</string>
+
+    <!-- Screens -->
+    <string name="screen_checklist">Document Checklist</string>
+    <string name="screen_decisions">Visa Decisions</string>
+    <string name="screen_my_applications">My Applications</string>
+    <string name="screen_visa_refused">Visa Refused</string>
 </resources>

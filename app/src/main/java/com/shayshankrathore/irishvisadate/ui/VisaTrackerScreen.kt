@@ -21,6 +21,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.content.Intent
+import android.provider.CalendarContract
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
+import com.shayshankrathore.irishvisadate.AppPreferences.SavedApplication
+import com.shayshankrathore.irishvisadate.NotificationWorker
+import java.util.concurrent.TimeUnit
 import com.shayshankrathore.irishvisadate.ALL_EMBASSIES
 import com.shayshankrathore.irishvisadate.AppPreferences
 import com.shayshankrathore.irishvisadate.Embassy
@@ -30,7 +38,13 @@ import com.shayshankrathore.irishvisadate.SHORT_STAY_MAX_DAYS
 import com.shayshankrathore.irishvisadate.SHORT_STAY_MIN_DAYS
 import com.shayshankrathore.irishvisadate.STUDY_MAX_DAYS
 import com.shayshankrathore.irishvisadate.STUDY_MIN_DAYS
+import com.shayshankrathore.irishvisadate.TRANSIT_MAX_DAYS
+import com.shayshankrathore.irishvisadate.TRANSIT_MIN_DAYS
 import com.shayshankrathore.irishvisadate.VacOption
+import com.shayshankrathore.irishvisadate.WORK_PERMIT_MAX_DAYS
+import com.shayshankrathore.irishvisadate.WORK_PERMIT_MIN_DAYS
+import com.shayshankrathore.irishvisadate.WORKING_HOLIDAY_MAX_DAYS
+import com.shayshankrathore.irishvisadate.WORKING_HOLIDAY_MIN_DAYS
 import com.shayshankrathore.irishvisadate.addWorkingDays
 import com.shayshankrathore.irishvisadate.workingDaysBetween
 import com.shayshankrathore.irishvisadate.ui.theme.*
@@ -47,6 +61,9 @@ enum class VisaType(val label: String, val minDays: Int, val maxDays: Int) {
     SHORT_STAY("Short Stay C", SHORT_STAY_MIN_DAYS, SHORT_STAY_MAX_DAYS),
     STUDY("Study (D)", STUDY_MIN_DAYS, STUDY_MAX_DAYS),
     JOIN_FAMILY("Join Family (D)", JOIN_FAMILY_MIN_DAYS, JOIN_FAMILY_MAX_DAYS),
+    WORK_PERMIT("Critical Skills / Work (D)", WORK_PERMIT_MIN_DAYS, WORK_PERMIT_MAX_DAYS),
+    WORKING_HOLIDAY("Working Holiday (D)", WORKING_HOLIDAY_MIN_DAYS, WORKING_HOLIDAY_MAX_DAYS),
+    TRANSIT("Transit (A)", TRANSIT_MIN_DAYS, TRANSIT_MAX_DAYS),
 }
 
 private val DATE_FMT: DateTimeFormatter =
@@ -55,7 +72,7 @@ private val DATE_FMT: DateTimeFormatter =
 private fun LocalDate.fmt(): String = format(DATE_FMT)
 private fun plural(n: Long) = if (n == 1L) "" else "s"
 
-enum class AppScreen { TRACKER, GRANTED, REFUSED }
+enum class AppScreen { TRACKER, GRANTED, REFUSED, CHECKLIST, DECISIONS_WEB, APP_LIST }
 
 // ── Harp watermark ────────────────────────────────────────────────────────────
 private fun DrawScope.drawHarp(alpha: Float = 0.13f) {
@@ -166,7 +183,11 @@ private fun IrishHeader(onHelpClick: () -> Unit) {
 @Suppress("DEPRECATION")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VisaTrackerScreen(onNavigate: (AppScreen) -> Unit) {
+fun VisaTrackerScreen(
+    onNavigate: (AppScreen) -> Unit,
+    onOpenChecklist: (VisaType) -> Unit,
+    onOpenDecisions: (String) -> Unit,
+) {
     val context = LocalContext.current
     val today   = LocalDate.now()
     val todayMs = today.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
@@ -215,6 +236,38 @@ fun VisaTrackerScreen(onNavigate: (AppScreen) -> Unit) {
                 visaTypeName   = visaType.name,
             )
         }
+    }
+
+    // Schedule / reschedule notifications when inputs change
+    LaunchedEffect(selectedEmbassy, selectedVac, submissionDate, visaType) {
+        if (!stateRestored) return@LaunchedEffect
+        val wm = WorkManager.getInstance(context)
+        wm.cancelAllWorkByTag(NotificationWorker.WORK_TAG)
+        val sub = submissionDate ?: return@LaunchedEffect
+        val holidays = selectedEmbassy.holidays
+        val receive  = sub.addWorkingDays(selectedVac.transitDays, holidays)
+        val earliest = receive.addWorkingDays(visaType.minDays, holidays)
+        val latest   = receive.addWorkingDays(visaType.maxDays, holidays)
+        val winDays  = workingDaysBetween(earliest, latest, holidays)
+        val now      = System.currentTimeMillis()
+        fun schedule(target: LocalDate, type: String) {
+            val delay = target.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli() - now
+            if (delay <= 0) return
+            wm.enqueue(
+                OneTimeWorkRequestBuilder<NotificationWorker>()
+                    .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+                    .setInputData(workDataOf(
+                        NotificationWorker.KEY_TYPE    to type,
+                        NotificationWorker.KEY_EMBASSY to selectedEmbassy.label,
+                        NotificationWorker.KEY_VISA    to visaType.label,
+                    ))
+                    .addTag(NotificationWorker.WORK_TAG)
+                    .build()
+            )
+        }
+        schedule(earliest.minusDays(1), NotificationWorker.TYPE_WINDOW_OPENS)
+        if (winDays > 2) schedule(earliest.plusDays(winDays / 2), NotificationWorker.TYPE_MIDPOINT)
+        schedule(latest.plusDays(1), NotificationWorker.TYPE_OVERDUE)
     }
 
     val sheetState          = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -269,7 +322,7 @@ fun VisaTrackerScreen(onNavigate: (AppScreen) -> Unit) {
                         showNoDecision = false
                     }
                 },
-                onOpenDecisions = { openCustomTab(context, selectedEmbassy.decisionsUrl) },
+                onOpenDecisions = { onOpenDecisions(selectedEmbassy.decisionsUrl) },
             )
         }
     }
@@ -509,6 +562,110 @@ fun VisaTrackerScreen(onNavigate: (AppScreen) -> Unit) {
                     passportReturnDate = passportReturn,
                     courierDays = selectedEmbassy.courierDays,
                 )
+
+                // ── Quick actions ─────────────────────────────────────────
+                AccentCard(title = "⚡  QUICK ACTIONS", accentColor = IrishGreen) {
+                    val shareText = buildString {
+                        append("🇮🇪 Irish Visa Application\n\n")
+                        append("Type: ${visaType.label}\n")
+                        append("Embassy: ${selectedEmbassy.label}\n")
+                        append("Submitted: ${submissionDate!!.fmt()}\n\n")
+                        append("Decision window: ${earliest.fmt()} – ${latest.fmt()}\n")
+                        append("Passport back by: ~${passportReturn.fmt()}\n\n")
+                        append("via Irish Visa Tracker")
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        OutlinedButton(
+                            onClick = {
+                                context.startActivity(
+                                    Intent.createChooser(
+                                        Intent(Intent.ACTION_SEND).apply {
+                                            type = "text/plain"
+                                            putExtra(Intent.EXTRA_TEXT, shareText)
+                                        }, "Share"
+                                    )
+                                )
+                            },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(10.dp),
+                            border = androidx.compose.foundation.BorderStroke(1.5.dp, IrishGreen),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = IrishGreen),
+                        ) { Text("📤 Share", fontWeight = FontWeight.SemiBold, fontSize = 13.sp) }
+
+                        OutlinedButton(
+                            onClick = {
+                                context.startActivity(
+                                    Intent(Intent.ACTION_INSERT).apply {
+                                        data = CalendarContract.Events.CONTENT_URI
+                                        putExtra(CalendarContract.Events.TITLE, "Irish Visa Decision Window")
+                                        putExtra(CalendarContract.Events.DESCRIPTION,
+                                            "Visa: ${visaType.label}\nEmbassy: ${selectedEmbassy.label}\nExpected: ${earliest.fmt()} – ${latest.fmt()}")
+                                        putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
+                                            earliest.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli())
+                                        putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
+                                            latest.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli())
+                                        putExtra(CalendarContract.Events.ALL_DAY, true)
+                                    }
+                                )
+                            },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(10.dp),
+                            border = androidx.compose.foundation.BorderStroke(1.5.dp, IrishGreen),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = IrishGreen),
+                        ) { Text("📅 Calendar", fontWeight = FontWeight.SemiBold, fontSize = 13.sp) }
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        OutlinedButton(
+                            onClick = { onOpenChecklist(visaType) },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(10.dp),
+                            border = androidx.compose.foundation.BorderStroke(1.5.dp, IrishGreen),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = IrishGreen),
+                        ) { Text("📋 Checklist", fontWeight = FontWeight.SemiBold, fontSize = 13.sp) }
+
+                        OutlinedButton(
+                            onClick = { onNavigate(AppScreen.APP_LIST) },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(10.dp),
+                            border = androidx.compose.foundation.BorderStroke(1.5.dp, IrishGreen),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = IrishGreen),
+                        ) { Text("📁 My Apps", fontWeight = FontWeight.SemiBold, fontSize = 13.sp) }
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    Button(
+                        onClick = {
+                            scope.launch {
+                                AppPreferences.saveApplication(
+                                    context,
+                                    SavedApplication(
+                                        id             = AppPreferences.newApplicationId(),
+                                        embassyId      = selectedEmbassy.id,
+                                        embassyLabel   = selectedEmbassy.label,
+                                        embassyFlag    = selectedEmbassy.flag,
+                                        vacLabel       = selectedVac.label,
+                                        submissionDate = submissionDate!!.toString(),
+                                        visaTypeName   = visaType.name,
+                                        visaTypeLabel  = visaType.label,
+                                        savedAt        = LocalDate.now().toString(),
+                                    )
+                                )
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth().height(48.dp),
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = IrishGreen, contentColor = Color.White),
+                    ) {
+                        Text("💾  Save Application", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    }
+                }
 
                 // ── Status update ─────────────────────────────────────────
                 AccentCard(title = "🔔  GOT AN UPDATE?", accentColor = IrishOrange) {

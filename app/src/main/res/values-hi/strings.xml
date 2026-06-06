@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">Irish Visa Expected Date</string>
+    <string name="widget_description">आयरिश वीज़ा निर्णय विंडो की स्थिति दिखाता है</string>
+
+    <!-- Section headers -->
+    <string name="section_embassy">🌍  आयरिश दूतावास</string>
+    <string name="section_submitted">📅  आवेदन जमा किया</string>
+    <string name="section_vac">📍  वीज़ा आवेदन केंद्र (VAC) स्थान</string>
+    <string name="section_visa_type">🛂  वीज़ा प्रकार</string>
+    <string name="section_got_update">🔔  कोई अपडेट मिला?</string>
+    <string name="section_quick_actions">⚡  त्वरित कार्य</string>
+
+    <!-- Buttons -->
+    <string name="btn_pick_date">आवेदन तिथि चुनें</string>
+    <string name="btn_change_date">तिथि बदलें</string>
+    <string name="btn_visa_granted">✅  मुझे वीज़ा मिल गया!</string>
+    <string name="btn_visa_refused">❌  मेरा वीज़ा अस्वीकार हो गया</string>
+    <string name="btn_no_decision">🕐  अभी कोई निर्णय नहीं</string>
+    <string name="btn_share">📤 शेयर करें</string>
+    <string name="btn_calendar">📅 कैलेंडर</string>
+    <string name="btn_checklist">📋 चेकलिस्ट</string>
+    <string name="btn_my_apps">📁 मेरे आवेदन</string>
+    <string name="btn_save_application">💾  आवेदन सहेजें</string>
+    <string name="btn_open_decisions">🌐  वीज़ा निर्णय पृष्ठ खोलें</string>
+    <string name="btn_back">← वापस</string>
+    <string name="btn_close">बंद करें</string>
+
+    <!-- Status messages -->
+    <string name="status_update_prompt">अपने आवेदन का परिणाम बताएं:</string>
+    <string name="decision_between">निर्णय की उम्मीद इन तारीखों के बीच है</string>
+    <string name="passport_back_by">पासपोर्ट ~%s तक वापस</string>
+    <string name="overdue_message">आपका आवेदन विलंबित हो सकता है — स्थिति जानने के लिए वीज़ा कार्यालय को ईमेल करें।</string>
+    <string name="no_apps_title">अभी कोई सहेजा हुआ आवेदन नहीं</string>
+    <string name="no_apps_body">वर्तमान आवेदन सहेजने के लिए ट्रैकर पर \"मेरे आवेदन\" बटन का उपयोग करें।</string>
+
+    <!-- Screens -->
+    <string name="screen_checklist">दस्तावेज़ चेकलिस्ट</string>
+    <string name="screen_decisions">वीज़ा निर्णय</string>
+    <string name="screen_my_applications">मेरे आवेदन</string>
+    <string name="screen_visa_refused">वीज़ा अस्वीकार</string>
+</resources>
