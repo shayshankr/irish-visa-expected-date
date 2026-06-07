@@ -9,6 +9,8 @@
     <string name="section_visa_type">🛂  VISA TYPE</string>
     <string name="section_got_update">🔔  GOT AN UPDATE?</string>
     <string name="section_quick_actions">⚡  QUICK ACTIONS</string>
+    <string name="section_biometric">🫆  BIOMETRIC APPOINTMENT (OPTIONAL)</string>
+    <string name="section_passport_expiry">🛂  PASSPORT EXPIRY (OPTIONAL)</string>
 
     <!-- Buttons -->
     <string name="btn_pick_date">Pick submission date</string>
@@ -24,6 +26,11 @@
     <string name="btn_open_decisions">🌐  Open Visa Decisions Page</string>
     <string name="btn_back">← Back</string>
     <string name="btn_close">Close</string>
+    <string name="btn_email_visa_office">📧 Email Visa Office (pre-filled)</string>
+    <string name="btn_contact_embassy">📞 Contact</string>
+    <string name="btn_faq">❓ FAQ</string>
+    <string name="btn_notifications">🔔 Notifs</string>
+    <string name="btn_backup">🗃 Backup</string>
 
     <!-- Status messages -->
     <string name="status_update_prompt">Let us know the outcome of your application:</string>
@@ -32,10 +39,31 @@
     <string name="overdue_message">Your application may be overdue — email the Visa Office for a status update.</string>
     <string name="no_apps_title">No saved applications yet</string>
     <string name="no_apps_body">Use the \"My Apps\" button on the tracker\nto save your current application.</string>
+    <string name="passport_expiry_warning">Passport may expire too close to decision date</string>
+    <string name="visa_fee_label">Application fee: €%d (non-refundable)</string>
+
+    <!-- Buttons — new features -->
+    <string name="btn_travel_planner">🗓 Travel Plan</string>
+    <string name="btn_visa_validity">📋 Validity</string>
+    <string name="btn_cost_calculator">💰 Costs</string>
+    <string name="btn_doc_tracker">📄 Docs</string>
+    <string name="btn_community_times">📊 Times</string>
+    <string name="btn_compare_vac">⚖️ Compare</string>
+    <string name="btn_pdf_export">📄 PDF</string>
+    <string name="btn_book_vac">🌐 Book VAC</string>
 
     <!-- Screens -->
     <string name="screen_checklist">Document Checklist</string>
     <string name="screen_decisions">Visa Decisions</string>
     <string name="screen_my_applications">My Applications</string>
     <string name="screen_visa_refused">Visa Refused</string>
+    <string name="screen_faq">FAQ</string>
+    <string name="screen_notification_settings">Notification Settings</string>
+    <string name="screen_backup">Backup &amp; Restore</string>
+    <string name="screen_onboarding">Welcome</string>
+    <string name="screen_travel_planner">Travel Date Planner</string>
+    <string name="screen_community_times">Community Processing Times</string>
+    <string name="screen_doc_tracker">Document Expiry Tracker</string>
+    <string name="screen_cost_calculator">Cost Calculator</string>
+    <string name="screen_visa_validity">Visa Validity Calculator</string>
 </resources>

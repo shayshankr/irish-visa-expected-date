@@ -20,6 +20,18 @@ fun LocalDate.addWorkingDays(days: Int, holidays: Set<LocalDate> = ALL_HOLIDAYS)
     return current
 }
 
+/** Returns the date that is [days] working days before [this], inclusive of [this] as day 1. */
+fun LocalDate.subtractWorkingDays(days: Int, holidays: Set<LocalDate> = ALL_HOLIDAYS): LocalDate {
+    if (days <= 0) return this
+    var remaining = days - 1
+    var current = this
+    while (remaining > 0) {
+        current = current.minusDays(1)
+        if (current.isWorkingDay(holidays)) remaining--
+    }
+    return current
+}
+
 /**
  * Counts the number of working days from [from] up to and including [to].
  * Returns 0 if [to] is before [from].

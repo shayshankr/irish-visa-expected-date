@@ -62,30 +62,38 @@ class VisaWidget : GlanceAppWidget() {
 
 @Composable
 private fun WidgetContent(statusLine: String, dateLine: String) {
+    val isOverdue  = statusLine.startsWith("Overdue")
+    val statusColor = if (isOverdue) Color(0xFFFF8F00) else Color(0xFF4CAF50)
+
     Box(
         modifier = GlanceModifier
             .fillMaxSize()
             .background(Color(0xFF063320))
-            .padding(12.dp)
             .clickable(actionStartActivity<MainActivity>()),
     ) {
-        Column(modifier = GlanceModifier.fillMaxSize()) {
-            Text(
-                "☘️ Irish Visa",
-                style = TextStyle(
-                    color = ColorProvider(Color.White),
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                ),
-            )
+        Column(
+            modifier = GlanceModifier.fillMaxSize().padding(10.dp),
+        ) {
+            Row(modifier = GlanceModifier.fillMaxWidth()) {
+                Text(
+                    "☘️ Irish Visa Tracker",
+                    style = TextStyle(
+                        color = ColorProvider(Color(0xCCFFFFFF)),
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                    modifier = GlanceModifier.defaultWeight(),
+                )
+            }
             Spacer(GlanceModifier.height(6.dp))
             Text(
                 statusLine,
                 style = TextStyle(
-                    color = ColorProvider(Color(0xFF4CAF50)),
-                    fontSize = 14.sp,
+                    color = ColorProvider(statusColor),
+                    fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                 ),
+                maxLines = 1,
             )
             if (dateLine.isNotBlank()) {
                 Spacer(GlanceModifier.height(2.dp))
@@ -95,8 +103,17 @@ private fun WidgetContent(statusLine: String, dateLine: String) {
                         color = ColorProvider(Color(0xCCFFFFFF)),
                         fontSize = 11.sp,
                     ),
+                    maxLines = 1,
                 )
             }
+            Spacer(GlanceModifier.defaultWeight())
+            Text(
+                "Tap to open",
+                style = TextStyle(
+                    color = ColorProvider(Color(0x88FFFFFF)),
+                    fontSize = 9.sp,
+                ),
+            )
         }
     }
 }

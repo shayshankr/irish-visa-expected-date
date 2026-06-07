@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Irish Visa Expected Date</string>
+    <string name="widget_description">يُظهر حالة نافذة قرار تأشيرة أيرلندا</string>
+
+    <string name="section_embassy">🌍  سفارة أيرلندا</string>
+    <string name="section_submitted">📅  تاريخ التقديم</string>
+    <string name="section_vac">📍  مركز تقديم التأشيرة (VAC)</string>
+    <string name="section_visa_type">🛂  نوع التأشيرة</string>
+    <string name="section_got_update">🔔  هل تلقيت تحديثاً؟</string>
+    <string name="section_quick_actions">⚡  إجراءات سريعة</string>
+
+    <string name="btn_pick_date">اختر تاريخ التقديم</string>
+    <string name="btn_change_date">تغيير التاريخ</string>
+    <string name="btn_visa_granted">✅  حصلت على التأشيرة!</string>
+    <string name="btn_visa_refused">❌  رُفضت تأشيرتي</string>
+    <string name="btn_no_decision">🕐  لا يوجد قرار بعد</string>
+    <string name="btn_share">📤 مشاركة</string>
+    <string name="btn_calendar">📅 تقويم</string>
+    <string name="btn_checklist">📋 قائمة مراجعة</string>
+    <string name="btn_my_apps">📁 طلباتي</string>
+    <string name="btn_save_application">💾  حفظ الطلب</string>
+    <string name="btn_open_decisions">🌐  فتح قائمة القرارات</string>
+    <string name="btn_back">→ رجوع</string>
+    <string name="btn_close">إغلاق</string>
+    <string name="btn_email_visa_office">📧 مراسلة مكتب التأشيرة</string>
+    <string name="btn_contact_embassy">📞 تواصل</string>
+    <string name="btn_faq">❓ أسئلة شائعة</string>
+    <string name="btn_notifications">🔔 الإشعارات</string>
+    <string name="btn_backup">🗃 نسخ احتياطي</string>
+
+    <string name="status_update_prompt">أخبرنا بنتيجة طلبك:</string>
+    <string name="decision_between">توقع قراراً بين</string>
+    <string name="passport_back_by">عودة جواز السفر ~%s</string>
+    <string name="overdue_message">قد يكون طلبك متأخراً — تواصل مع مكتب التأشيرة للاستفسار عن الحالة.</string>
+    <string name="no_apps_title">لا توجد طلبات محفوظة</string>
+    <string name="no_apps_body">استخدم زر «طلباتي» في التطبيق لحفظ طلبك الحالي.</string>
+
+    <string name="screen_checklist">قائمة المستندات</string>
+    <string name="screen_decisions">قرارات التأشيرة</string>
+    <string name="screen_my_applications">طلباتي</string>
+    <string name="screen_visa_refused">رفض التأشيرة</string>
+    <string name="screen_faq">أسئلة شائعة</string>
+    <string name="screen_notification_settings">إعدادات الإشعارات</string>
+    <string name="screen_backup">نسخ احتياطي واستعادة</string>
+</resources>

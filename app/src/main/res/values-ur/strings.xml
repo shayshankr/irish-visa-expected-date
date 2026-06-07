@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Irish Visa Expected Date</string>
+    <string name="widget_description">آئرش ویزا کی فیصلے کی ونڈو کی حیثیت دکھاتا ہے</string>
+
+    <string name="section_embassy">🌍  آئرلینڈ سفارت خانہ</string>
+    <string name="section_submitted">📅  درخواست جمع کرانے کی تاریخ</string>
+    <string name="section_vac">📍  ویزا درخواست مرکز (VAC)</string>
+    <string name="section_visa_type">🛂  ویزا کی قسم</string>
+    <string name="section_got_update">🔔  کوئی اپڈیٹ ملی؟</string>
+    <string name="section_quick_actions">⚡  فوری اقدامات</string>
+
+    <string name="btn_pick_date">جمع کرانے کی تاریخ منتخب کریں</string>
+    <string name="btn_change_date">تاریخ تبدیل کریں</string>
+    <string name="btn_visa_granted">✅  ویزا مل گیا!</string>
+    <string name="btn_visa_refused">❌  ویزا مسترد ہو گیا</string>
+    <string name="btn_no_decision">🕐  ابھی تک کوئی فیصلہ نہیں</string>
+    <string name="btn_share">📤 شیئر کریں</string>
+    <string name="btn_calendar">📅 کیلنڈر</string>
+    <string name="btn_checklist">📋 چیک لسٹ</string>
+    <string name="btn_my_apps">📁 میری درخواستیں</string>
+    <string name="btn_save_application">💾  درخواست محفوظ کریں</string>
+    <string name="btn_open_decisions">🌐  فیصلوں کی فہرست کھولیں</string>
+    <string name="btn_back">← واپس</string>
+    <string name="btn_close">بند کریں</string>
+    <string name="btn_email_visa_office">📧 ویزا آفس کو ای میل</string>
+    <string name="btn_contact_embassy">📞 رابطہ</string>
+    <string name="btn_faq">❓ عام سوالات</string>
+    <string name="btn_notifications">🔔 اطلاعات</string>
+    <string name="btn_backup">🗃 بیک اپ</string>
+
+    <string name="status_update_prompt">اپنی درخواست کا نتیجہ بتائیں:</string>
+    <string name="decision_between">فیصلے کی توقع اس درمیان:</string>
+    <string name="passport_back_by">پاسپورٹ ~%s تک واپس</string>
+    <string name="overdue_message">آپ کی درخواست تاخیر کا شکار ہو سکتی ہے — ویزا آفس کو ای میل کریں۔</string>
+    <string name="no_apps_title">کوئی محفوظ درخواست نہیں</string>
+    <string name="no_apps_body">موجودہ درخواست محفوظ کرنے کے لیے ٹریکر پر «میری درخواستیں» کا بٹن استعمال کریں۔</string>
+
+    <string name="screen_checklist">دستاویز چیک لسٹ</string>
+    <string name="screen_decisions">ویزا فیصلے</string>
+    <string name="screen_my_applications">میری درخواستیں</string>
+    <string name="screen_visa_refused">ویزا مسترد</string>
+    <string name="screen_faq">عام سوالات</string>
+    <string name="screen_notification_settings">اطلاع کی ترتیبات</string>
+    <string name="screen_backup">بیک اپ اور بحالی</string>
+</resources>

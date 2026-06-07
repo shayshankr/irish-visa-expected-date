@@ -8,6 +8,12 @@ data class VacOption(
     val transitDays: Int,
 )
 
+data class EmbassyContact(
+    val phone: String,
+    val email: String,
+    val address: String,
+)
+
 data class Embassy(
     val id: String,
     val label: String,
@@ -17,6 +23,8 @@ data class Embassy(
     val decisionsUrl: String,
     val courierNote: String,
     val courierDays: Int,
+    val contact: EmbassyContact,
+    val vacBookingUrl: String = "",  // VFS Global / BLS appointment booking page
 )
 
 val EMBASSY_INDIA = Embassy(
@@ -31,6 +39,12 @@ val EMBASSY_INDIA = Embassy(
     decisionsUrl = "https://www.ireland.ie/en/india/newdelhi/services/visas/processing-times-and-decisions/",
     courierNote = "Plus ~3 working days for return courier (Irish Embassy → Delhi VAC → your address via Blue Dart)",
     courierDays = 3,
+    contact = EmbassyContact(
+        phone   = "+91 11 4940 3200",
+        email   = "visainfo.newdelhi@dfa.ie",
+        address = "230 Jor Bagh, New Delhi 110003",
+    ),
+    vacBookingUrl = "https://visa.vfsglobal.com/ind/en/irl",
 )
 
 val EMBASSY_MOSCOW = Embassy(
@@ -46,6 +60,12 @@ val EMBASSY_MOSCOW = Embassy(
     decisionsUrl = "https://www.irishimmigration.ie",
     courierNote = "Plus ~3–5 working days for return courier from Irish Embassy Moscow",
     courierDays = 5,
+    contact = EmbassyContact(
+        phone   = "+7 495 937 5911",
+        email   = "moscow@dfa.ie",
+        address = "Grokholsky Per. 5, 129010 Moscow",
+    ),
+    vacBookingUrl = "https://visa.vfsglobal.com/rus/en/irl",
 )
 
 val EMBASSY_LONDON = Embassy(
@@ -60,6 +80,12 @@ val EMBASSY_LONDON = Embassy(
     decisionsUrl = "https://www.irishimmigration.ie",
     courierNote = "Plus ~2–3 working days for return courier from Irish Embassy London",
     courierDays = 3,
+    contact = EmbassyContact(
+        phone   = "+44 20 7235 2171",
+        email   = "londonvisa@dfa.ie",
+        address = "17 Grosvenor Place, London SW1X 7HR",
+    ),
+    vacBookingUrl = "https://visa.vfsglobal.com/gbr/en/irl",
 )
 
 val EMBASSY_BEIJING = Embassy(
@@ -75,6 +101,12 @@ val EMBASSY_BEIJING = Embassy(
     decisionsUrl = "https://www.ireland.ie/en/china/beijing/services/visas/",
     courierNote = "Plus ~3–5 working days for return courier from Irish Embassy Beijing",
     courierDays = 5,
+    contact = EmbassyContact(
+        phone   = "+86 10 6532 2691",
+        email   = "beijing@dfa.ie",
+        address = "3 Ritan Dong Lu, Chaoyang District, Beijing 100600",
+    ),
+    vacBookingUrl = "https://visa.vfsglobal.com/chn/en/irl",
 )
 
 val EMBASSY_ANKARA = Embassy(
@@ -89,6 +121,12 @@ val EMBASSY_ANKARA = Embassy(
     decisionsUrl = "https://www.irishimmigration.ie",
     courierNote = "Plus ~2–3 working days for return courier from Irish Embassy Ankara",
     courierDays = 3,
+    contact = EmbassyContact(
+        phone   = "+90 312 446 6172",
+        email   = "ankara@dfa.ie",
+        address = "Uğur Mumcu Cad. 88, Gaziosmanpaşa, Ankara 06700",
+    ),
+    vacBookingUrl = "https://visa.vfsglobal.com/tur/en/irl",
 )
 
 val EMBASSY_ABU_DHABI = Embassy(
@@ -103,6 +141,12 @@ val EMBASSY_ABU_DHABI = Embassy(
     decisionsUrl = "https://www.ireland.ie/en/uae/abudhabi/services/visas/",
     courierNote = "Plus ~2–3 working days for return courier from Irish Embassy Abu Dhabi",
     courierDays = 3,
+    contact = EmbassyContact(
+        phone   = "+971 2 495 8200",
+        email   = "abudhabi@dfa.ie",
+        address = "Al Bateen Area, Khalifa bin Zayed St, Abu Dhabi",
+    ),
+    vacBookingUrl = "https://visa.vfsglobal.com/are/en/irl",
 )
 
 val EMBASSY_ISLAMABAD = Embassy(
@@ -118,6 +162,12 @@ val EMBASSY_ISLAMABAD = Embassy(
     decisionsUrl = "https://www.ireland.ie/en/pakistan/islamabad/services/visas/",
     courierNote = "Plus ~3–5 working days for return courier from Irish Embassy Islamabad",
     courierDays = 5,
+    contact = EmbassyContact(
+        phone   = "+92 51 831 6950",
+        email   = "islamabad@dfa.ie",
+        address = "Plot 1, Diplomatic Enclave, Islamabad 44000",
+    ),
+    vacBookingUrl = "https://www.blsinternational.com/ireland/",
 )
 
 val EMBASSY_GERMANY = Embassy(
@@ -132,6 +182,12 @@ val EMBASSY_GERMANY = Embassy(
     decisionsUrl = "https://www.ireland.ie/en/germany/berlin/services/visas/",
     courierNote = "Plus ~2–3 working days for return courier from Irish Embassy Berlin",
     courierDays = 3,
+    contact = EmbassyContact(
+        phone   = "+49 30 220 720",
+        email   = "berlin@dfa.ie",
+        address = "Jägerstraße 51, 10117 Berlin",
+    ),
+    vacBookingUrl = "https://visa.vfsglobal.com/deu/en/irl",
 )
 
 val EMBASSY_FRANCE = Embassy(
@@ -146,6 +202,12 @@ val EMBASSY_FRANCE = Embassy(
     decisionsUrl = "https://www.ireland.ie/en/france/paris/services/visas/",
     courierNote = "Plus ~2–3 working days for return courier from Irish Embassy Paris",
     courierDays = 3,
+    contact = EmbassyContact(
+        phone   = "+33 1 44 17 67 00",
+        email   = "paris@dfa.ie",
+        address = "4 Rue Rude, 75116 Paris",
+    ),
+    vacBookingUrl = "https://visa.vfsglobal.com/fra/en/irl",
 )
 
 val EMBASSY_NIGERIA = Embassy(
@@ -160,6 +222,12 @@ val EMBASSY_NIGERIA = Embassy(
     decisionsUrl = "https://www.ireland.ie/en/nigeria/abuja/services/visas/",
     courierNote = "Plus ~3–5 working days for return courier from Irish Embassy Abuja",
     courierDays = 5,
+    contact = EmbassyContact(
+        phone   = "+234 9 461 9600",
+        email   = "abuja@dfa.ie",
+        address = "7 Summerton Road, Maitama, Abuja",
+    ),
+    vacBookingUrl = "https://visa.vfsglobal.com/nga/en/irl",
 )
 
 val EMBASSY_SOUTH_AFRICA = Embassy(
@@ -175,6 +243,12 @@ val EMBASSY_SOUTH_AFRICA = Embassy(
     decisionsUrl = "https://www.ireland.ie/en/southafrica/pretoria/services/visas/",
     courierNote = "Plus ~3–5 working days for return courier from Irish Embassy Pretoria",
     courierDays = 5,
+    contact = EmbassyContact(
+        phone   = "+27 12 342 5062",
+        email   = "pretoria@dfa.ie",
+        address = "Libertas House, 97 Gleneagles Road, Greenside, Johannesburg",
+    ),
+    vacBookingUrl = "https://visa.vfsglobal.com/zaf/en/irl",
 )
 
 val EMBASSY_PHILIPPINES = Embassy(
@@ -189,6 +263,12 @@ val EMBASSY_PHILIPPINES = Embassy(
     decisionsUrl = "https://www.ireland.ie/en/philippines/manila/services/visas/",
     courierNote = "Plus ~3–5 working days for return courier from Irish Embassy Manila",
     courierDays = 5,
+    contact = EmbassyContact(
+        phone   = "+63 2 8859 2000",
+        email   = "manila@dfa.ie",
+        address = "70F Tower One & Exchange Plaza, Ayala Triangle, Makati City",
+    ),
+    vacBookingUrl = "https://visa.vfsglobal.com/phl/en/irl",
 )
 
 val EMBASSY_BANGLADESH = Embassy(
@@ -203,6 +283,12 @@ val EMBASSY_BANGLADESH = Embassy(
     decisionsUrl = "https://www.ireland.ie/en/bangladesh/dhaka/services/visas/",
     courierNote = "Plus ~3–5 working days for return courier from Irish Embassy Dhaka",
     courierDays = 5,
+    contact = EmbassyContact(
+        phone   = "+880 2 9882305",
+        email   = "dhaka@dfa.ie",
+        address = "House 20, Road 73, Gulshan-2, Dhaka 1212",
+    ),
+    vacBookingUrl = "https://visa.vfsglobal.com/bgd/en/irl",
 )
 
 val ALL_EMBASSIES: List<Embassy> = listOf(

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Irish Visa Expected Date</string>
+    <string name="widget_description">显示您的爱尔兰签证决定窗口状态</string>
+
+    <string name="section_embassy">🌍  爱尔兰大使馆</string>
+    <string name="section_submitted">📅  申请提交日期</string>
+    <string name="section_vac">📍  签证申请中心 (VAC)</string>
+    <string name="section_visa_type">🛂  签证类型</string>
+    <string name="section_got_update">🔔  收到更新了吗？</string>
+    <string name="section_quick_actions">⚡  快捷操作</string>
+
+    <string name="btn_pick_date">选择提交日期</string>
+    <string name="btn_change_date">更改日期</string>
+    <string name="btn_visa_granted">✅  签证获批！</string>
+    <string name="btn_visa_refused">❌  签证被拒绝</string>
+    <string name="btn_no_decision">🕐  尚无决定</string>
+    <string name="btn_share">📤 分享</string>
+    <string name="btn_calendar">📅 日历</string>
+    <string name="btn_checklist">📋 清单</string>
+    <string name="btn_my_apps">📁 我的申请</string>
+    <string name="btn_save_application">💾  保存申请</string>
+    <string name="btn_open_decisions">🌐  打开决定列表</string>
+    <string name="btn_back">← 返回</string>
+    <string name="btn_close">关闭</string>
+    <string name="btn_email_visa_office">📧 邮件联系签证处</string>
+    <string name="btn_contact_embassy">📞 联系</string>
+    <string name="btn_faq">❓ 常见问题</string>
+    <string name="btn_notifications">🔔 通知</string>
+    <string name="btn_backup">🗃 备份</string>
+
+    <string name="status_update_prompt">请告知您的申请结果：</string>
+    <string name="decision_between">预计决定时间：</string>
+    <string name="passport_back_by">护照预计归还 ~%s</string>
+    <string name="overdue_message">您的申请可能已逾期 — 请发邮件给签证处查询状态。</string>
+    <string name="no_apps_title">暂无保存的申请</string>
+    <string name="no_apps_body">在跟踪器上使用"我的申请"按钮保存当前申请。</string>
+
+    <string name="screen_checklist">文件清单</string>
+    <string name="screen_decisions">签证决定</string>
+    <string name="screen_my_applications">我的申请</string>
+    <string name="screen_visa_refused">签证被拒</string>
+    <string name="screen_faq">常见问题</string>
+    <string name="screen_notification_settings">通知设置</string>
+    <string name="screen_backup">备份与恢复</string>
+</resources>

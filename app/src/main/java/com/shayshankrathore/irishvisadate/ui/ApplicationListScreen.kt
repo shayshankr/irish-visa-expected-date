@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.CoroutineScope
 import com.shayshankrathore.irishvisadate.ALL_EMBASSIES
 import com.shayshankrathore.irishvisadate.AppPreferences
 import com.shayshankrathore.irishvisadate.AppPreferences.SavedApplication
@@ -91,13 +92,70 @@ fun ApplicationListScreen(
     }
 }
 
+@Suppress("DEPRECATION")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ApplicationCard(
     app: SavedApplication,
     onLoad: () -> Unit,
     onDelete: () -> Unit,
 ) {
-    val today    = LocalDate.now()
+    val context     = androidx.compose.ui.platform.LocalContext.current
+    val scope       = rememberCoroutineScope()
+    val today       = LocalDate.now()
+    var showHistory by remember { mutableStateOf(false) }
+    var showNotes   by remember { mutableStateOf(false) }
+    var editNotes   by remember { mutableStateOf(app.notes) }
+    var showDecisionPicker by remember { mutableStateOf(false) }
+
+    val todayMs = today.atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli()
+    val decisionPickerState = rememberDatePickerState(
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long) = utcTimeMillis <= todayMs
+        },
+    )
+
+    if (showDecisionPicker) {
+        DatePickerDialog(
+            onDismissRequest = { showDecisionPicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    decisionPickerState.selectedDateMillis?.let { millis ->
+                        val date = java.time.Instant.ofEpochMilli(millis).atZone(java.time.ZoneOffset.UTC).toLocalDate()
+                        scope.launch { AppPreferences.setApplicationDecisionDate(context, app.id, date.toString()) }
+                    }
+                    showDecisionPicker = false
+                }) { Text("Save", color = IrishGreen, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold) }
+            },
+            dismissButton = { TextButton(onClick = { showDecisionPicker = false }) { Text("Cancel") } },
+        ) { DatePicker(state = decisionPickerState) }
+    }
+
+    if (showNotes) {
+        AlertDialog(
+            onDismissRequest = { showNotes = false },
+            title = { Text("Application Notes", fontWeight = androidx.compose.ui.text.font.FontWeight.Bold) },
+            text = {
+                OutlinedTextField(
+                    value = editNotes,
+                    onValueChange = { editNotes = it },
+                    label = { Text("Your notes") },
+                    modifier = Modifier.fillMaxWidth(),
+                    minLines = 3,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = IrishGreen, focusedLabelColor = IrishGreen,
+                    ),
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    scope.launch { AppPreferences.updateApplicationNotes(context, app.id, editNotes) }
+                    showNotes = false
+                }) { Text("Save", color = IrishGreen, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold) }
+            },
+            dismissButton = { TextButton(onClick = { showNotes = false }) { Text("Cancel") } },
+        )
+    }
     val embassy  = ALL_EMBASSIES.find { it.id == app.embassyId }
     val vac      = embassy?.vacOptions?.find { it.label == app.vacLabel }
     val visaType = runCatching { VisaType.valueOf(app.visaTypeName) }.getOrNull()
@@ -175,8 +233,62 @@ private fun ApplicationCard(
                     color = IrishGreen,
                 )
             }
-            TextButton(onClick = onDelete) {
-                Text("🗑️", fontSize = 18.sp)
+            Column(horizontalAlignment = Alignment.End) {
+                TextButton(onClick = onDelete) { Text("🗑️", fontSize = 18.sp) }
+                TextButton(onClick = { showHistory = !showHistory }) {
+                    Text(if (showHistory) "▲" else "📜", fontSize = 14.sp, color = IrishGreen)
+                }
+                TextButton(onClick = { editNotes = app.notes; showNotes = true }) {
+                    Text("✏️", fontSize = 14.sp)
+                }
+            }
+        }
+
+        // Notes row
+        if (app.notes.isNotBlank()) {
+            HorizontalDivider(color = DividerGreen, modifier = Modifier.padding(horizontal = 14.dp))
+            Row(modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)) {
+                Text("📝 ", fontSize = 12.sp)
+                Text(app.notes, style = MaterialTheme.typography.labelSmall, color = TextSecondary)
+            }
+        }
+
+        // Decision date row
+        if (app.decisionDate.isNotBlank()) {
+            HorizontalDivider(color = DividerGreen, modifier = Modifier.padding(horizontal = 14.dp))
+            Row(
+                modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text("📅 Decision: ", style = MaterialTheme.typography.labelSmall, color = TextHint)
+                Text(app.decisionDate, style = MaterialTheme.typography.labelSmall, color = IrishGreenDark, fontWeight = FontWeight.SemiBold)
+            }
+        } else {
+            HorizontalDivider(color = DividerGreen, modifier = Modifier.padding(horizontal = 14.dp))
+            Row(
+                modifier = Modifier.padding(horizontal = 14.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text("Record actual decision date: ", style = MaterialTheme.typography.labelSmall, color = TextHint, modifier = Modifier.weight(1f))
+                TextButton(
+                    onClick = { showDecisionPicker = true },
+                    contentPadding = PaddingValues(horizontal = 6.dp, vertical = 2.dp),
+                ) { Text("+ Add date", color = IrishGreen, fontSize = 11.sp, fontWeight = FontWeight.SemiBold) }
+            }
+        }
+
+        if (showHistory && app.statusHistory.isNotBlank()) {
+            HorizontalDivider(color = DividerGreen, modifier = Modifier.padding(horizontal = 14.dp))
+            Column(modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp)) {
+                Text("HISTORY", fontWeight = FontWeight.ExtraBold, fontSize = 10.sp, color = IrishGreen, letterSpacing = 0.8.sp)
+                Spacer(Modifier.height(4.dp))
+                app.statusHistory.split("|").forEach { entry ->
+                    Text(
+                        "• $entry",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = TextSecondary,
+                    )
+                }
             }
         }
     }

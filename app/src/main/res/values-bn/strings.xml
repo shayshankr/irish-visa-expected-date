@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Irish Visa Expected Date</string>
+    <string name="widget_description">আপনার আইরিশ ভিসা সিদ্ধান্তের উইন্ডো স্ট্যাটাস দেখায়</string>
+
+    <string name="section_embassy">🌍  আয়ারল্যান্ড দূতাবাস</string>
+    <string name="section_submitted">📅  আবেদন জমার তারিখ</string>
+    <string name="section_vac">📍  ভিসা আবেদন কেন্দ্র (VAC)</string>
+    <string name="section_visa_type">🛂  ভিসার ধরন</string>
+    <string name="section_got_update">🔔  আপডেট পেয়েছেন?</string>
+    <string name="section_quick_actions">⚡  দ্রুত কার্যক্রম</string>
+
+    <string name="btn_pick_date">জমার তারিখ বেছে নিন</string>
+    <string name="btn_change_date">তারিখ পরিবর্তন করুন</string>
+    <string name="btn_visa_granted">✅  ভিসা পেয়েছি!</string>
+    <string name="btn_visa_refused">❌  ভিসা প্রত্যাখ্যাত</string>
+    <string name="btn_no_decision">🕐  এখনও কোনো সিদ্ধান্ত নেই</string>
+    <string name="btn_share">📤 শেয়ার</string>
+    <string name="btn_calendar">📅 ক্যালেন্ডার</string>
+    <string name="btn_checklist">📋 চেকলিস্ট</string>
+    <string name="btn_my_apps">📁 আমার আবেদন</string>
+    <string name="btn_save_application">💾  আবেদন সংরক্ষণ</string>
+    <string name="btn_open_decisions">🌐  সিদ্ধান্তের তালিকা খুলুন</string>
+    <string name="btn_back">← ফিরে যান</string>
+    <string name="btn_close">বন্ধ করুন</string>
+    <string name="btn_email_visa_office">📧 ভিসা অফিসে ইমেইল</string>
+    <string name="btn_contact_embassy">📞 যোগাযোগ</string>
+    <string name="btn_faq">❓ সাধারণ প্রশ্ন</string>
+    <string name="btn_notifications">🔔 বিজ্ঞপ্তি</string>
+    <string name="btn_backup">🗃 ব্যাকআপ</string>
+
+    <string name="status_update_prompt">আপনার আবেদনের ফলাফল জানান:</string>
+    <string name="decision_between">সিদ্ধান্ত আশা করুন এর মধ্যে</string>
+    <string name="passport_back_by">পাসপোর্ট ফেরত ~%s</string>
+    <string name="overdue_message">আপনার আবেদন বিলম্বিত হতে পারে — ভিসা অফিসে ইমেইল করুন।</string>
+    <string name="no_apps_title">কোনো সংরক্ষিত আবেদন নেই</string>
+    <string name="no_apps_body">ট্র্যাকারে «আমার আবেদন» বোতাম ব্যবহার করে বর্তমান আবেদন সংরক্ষণ করুন।</string>
+
+    <string name="screen_checklist">নথি চেকলিস্ট</string>
+    <string name="screen_decisions">ভিসার সিদ্ধান্ত</string>
+    <string name="screen_my_applications">আমার আবেদন</string>
+    <string name="screen_visa_refused">ভিসা প্রত্যাখ্যাত</string>
+    <string name="screen_faq">সাধারণ প্রশ্ন</string>
+    <string name="screen_notification_settings">বিজ্ঞপ্তি সেটিংস</string>
+    <string name="screen_backup">ব্যাকআপ ও পুনরুদ্ধার</string>
+</resources>
