@@ -3,6 +3,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.play.publisher)
 }
 
 val keystoreProps = Properties().apply {
@@ -22,8 +23,8 @@ android {
         applicationId = "com.shayshankrathore.irishvisadate"
         minSdk = 24
         targetSdk = 36
-        versionCode = 16
-        versionName = "1.7.0"
+        versionCode = 19
+        versionName = "1.7.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -60,6 +61,11 @@ android {
     }
 }
 
+play {
+    serviceAccountCredentials.set(rootProject.file("play-service-account.json"))
+    track.set("alpha")
+    defaultToAppBundles.set(true)
+}
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
