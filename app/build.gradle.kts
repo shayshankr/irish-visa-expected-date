@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.play.publisher)
+    alias(libs.plugins.google.services)
 }
 
 val keystoreProps = Properties().apply {
