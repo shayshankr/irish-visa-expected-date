@@ -25,5 +25,4 @@ const val TRANSIT_MAX_DAYS = 15
 // Per-embassy decisions URLs live in Embassy.kt.
 const val URL_APPEALS_INFO = "https://www.irishimmigration.ie"
 
-// TODO: replace with the hosted privacy policy URL before enabling community sharing in production.
-const val PRIVACY_POLICY_URL = "https://www.irishimmigration.ie"
+const val PRIVACY_POLICY_URL = "https://shayshankr.github.io/irish-visa-expected-date/privacy-policy.html"
