@@ -28,6 +28,7 @@ object AppPreferences {
     private val KEY_NOTIF_WATCHDOG  = booleanPreferencesKey("notif_watchdog")
     private val KEY_DOCUMENTS       = stringPreferencesKey("tracked_documents")
     private val KEY_WATCHDOG_HASHES = stringPreferencesKey("watchdog_hashes")
+    private val KEY_SHARED_APP_IDS  = stringPreferencesKey("shared_app_ids")
 
     // ── Tracker state ─────────────────────────────────────────────────────────
 
@@ -261,6 +262,20 @@ object AppPreferences {
             val raw     = prefs[KEY_WATCHDOG_HASHES] ?: ""
             val entries = raw.split(",").filter { it.isNotBlank() && !it.startsWith("$embassyId::") }
             prefs[KEY_WATCHDOG_HASHES] = (entries + "$embassyId::$hash").joinToString(",")
+        }
+    }
+
+    // ── Community sharing (Firestore opt-in tracking) ─────────────────────────
+
+    fun sharedAppIdsFlow(context: Context): Flow<Set<String>> =
+        context.dataStore.data.map { prefs ->
+            (prefs[KEY_SHARED_APP_IDS] ?: "").split(",").filter { it.isNotBlank() }.toSet()
+        }
+
+    suspend fun markApplicationShared(context: Context, id: String) {
+        context.dataStore.edit { prefs ->
+            val current = (prefs[KEY_SHARED_APP_IDS] ?: "").split(",").filter { it.isNotBlank() }.toSet()
+            prefs[KEY_SHARED_APP_IDS] = (current + id).joinToString(",")
         }
     }
 

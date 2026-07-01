@@ -1,6 +1,7 @@
 package com.shayshankrathore.irishvisadate.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -40,6 +41,19 @@ data class ProcessingRecord(
     val calendarDays: Long get() = ChronoUnit.DAYS.between(submissionDate, decisionDate)
 }
 
+private data class ShareCandidate(
+    val app: AppPreferences.SavedApplication,
+    val decisionDate: String,
+    val initialStatus: String,
+)
+
+private sealed interface CommunityStatState {
+    data object Loading : CommunityStatState
+    data class Loaded(val stats: CommunitySubmissionRepository.AggregateStats) : CommunityStatState
+    data object NotEnoughData : CommunityStatState
+    data object Error : CommunityStatState
+}
+
 @Suppress("DEPRECATION")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,6 +61,9 @@ fun CommunityTimesScreen(onBack: () -> Unit) {
     val context = LocalContext.current
     val scope   = rememberCoroutineScope()
     val apps by AppPreferences.savedApplicationsFlow(context).collectAsState(initial = emptyList())
+    val sharedAppIds by AppPreferences.sharedAppIdsFlow(context).collectAsState(initial = emptySet())
+    val snackbarHostState = remember { SnackbarHostState() }
+    var shareCandidate by remember { mutableStateOf<ShareCandidate?>(null) }
 
     val records = remember(apps) {
         apps.mapNotNull { app ->
@@ -91,6 +108,9 @@ fun CommunityTimesScreen(onBack: () -> Unit) {
                             scope.launch {
                                 AppPreferences.setApplicationDecisionDate(context, app.id, date.toString())
                             }
+                            if (app.id !in sharedAppIds) {
+                                shareCandidate = ShareCandidate(app, date.toString(), app.status)
+                            }
                         }
                     }
                     showPicker = false; recordingApp = null
@@ -100,8 +120,74 @@ fun CommunityTimesScreen(onBack: () -> Unit) {
         ) { DatePicker(state = pickerState) }
     }
 
+    shareCandidate?.let { candidate ->
+        val needsStatusChoice = candidate.initialStatus != "GRANTED" && candidate.initialStatus != "REFUSED"
+        var chosenStatus by remember(candidate) {
+            mutableStateOf(candidate.initialStatus.takeIf { !needsStatusChoice })
+        }
+        AlertDialog(
+            onDismissRequest = { shareCandidate = null },
+            title = { Text("Share this outcome anonymously?") },
+            text = {
+                Column {
+                    Text(
+                        "Helps other applicants estimate wait times. No personal information is included — only embassy, visa type, and dates.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = TextSecondary,
+                    )
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        "Privacy Policy",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = IrishGreen,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.clickable { openCustomTab(context, PRIVACY_POLICY_URL) },
+                    )
+                    if (needsStatusChoice) {
+                        Spacer(Modifier.height(12.dp))
+                        Text("What was the outcome?", fontWeight = FontWeight.SemiBold, fontSize = 12.sp)
+                        Row(Modifier.padding(top = 6.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            FilterChip(
+                                selected = chosenStatus == "GRANTED",
+                                onClick = { chosenStatus = "GRANTED" },
+                                label = { Text("Granted") },
+                            )
+                            FilterChip(
+                                selected = chosenStatus == "REFUSED",
+                                onClick = { chosenStatus = "REFUSED" },
+                                label = { Text("Refused") },
+                            )
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = chosenStatus != null,
+                    onClick = {
+                        val statusToSubmit = chosenStatus!!
+                        shareCandidate = null
+                        scope.launch {
+                            val result = CommunitySubmissionRepository.submit(
+                                context, candidate.app, candidate.decisionDate, statusToSubmit,
+                            )
+                            if (result.isSuccess) {
+                                AppPreferences.markApplicationShared(context, candidate.app.id)
+                                snackbarHostState.showSnackbar("Thanks — shared anonymously")
+                            } else {
+                                snackbarHostState.showSnackbar("Couldn't share right now — try again later")
+                            }
+                        }
+                    },
+                ) { Text("Share", color = IrishGreen, fontWeight = FontWeight.Bold) }
+            },
+            dismissButton = { TextButton(onClick = { shareCandidate = null }) { Text("Not now") } },
+        )
+    }
+
     Scaffold(
         containerColor = IrishGreenBg,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text("Processing Times", fontWeight = FontWeight.ExtraBold) },
@@ -136,6 +222,24 @@ fun CommunityTimesScreen(onBack: () -> Unit) {
                     color = IrishGreenDark,
                     fontSize = 14.sp,
                 )
+            }
+
+            val communityGroups = remember(apps) {
+                apps.groupBy { it.embassyId to it.visaTypeName }
+                    .map { (key, list) ->
+                        Triple(key.first, key.second, "${list.first().embassyFlag} ${list.first().embassyLabel} — ${list.first().visaTypeLabel}")
+                    }
+            }
+            if (communityGroups.isNotEmpty()) {
+                Text(
+                    "🌍  COMMUNITY STATS",
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 13.sp,
+                    color = IrishGreenDark,
+                )
+                communityGroups.forEach { (embassyId, visaTypeName, headerLabel) ->
+                    CommunityStatCard(embassyId = embassyId, visaTypeName = visaTypeName, headerLabel = headerLabel)
+                }
             }
 
             if (groups.isEmpty()) {
@@ -186,6 +290,19 @@ fun CommunityTimesScreen(onBack: () -> Unit) {
                                     Text("Decision ${rec.decisionDate.fmtCt()}", style = MaterialTheme.typography.labelSmall, color = IrishGreenDark)
                                 }
                                 Text("${rec.calendarDays}d", fontWeight = FontWeight.Bold, color = IrishGreen, fontSize = 13.sp)
+                                if (rec.appId in sharedAppIds) {
+                                    Text("✓ Shared", fontSize = 10.sp, color = IrishGreen, modifier = Modifier.padding(start = 8.dp))
+                                } else {
+                                    val sourceApp = apps.firstOrNull { it.id == rec.appId }
+                                    if (sourceApp != null) {
+                                        TextButton(
+                                            onClick = {
+                                                shareCandidate = ShareCandidate(sourceApp, rec.decisionDate.toString(), sourceApp.status)
+                                            },
+                                            contentPadding = PaddingValues(horizontal = 4.dp),
+                                        ) { Text("Share", fontSize = 10.sp, color = IrishGreen) }
+                                    }
+                                }
                             }
                         }
                     }
@@ -246,5 +363,60 @@ private fun StatBlock(value: String, label: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(value, fontWeight = FontWeight.ExtraBold, fontSize = 22.sp, color = IrishGreenDark)
         Text(label, style = MaterialTheme.typography.labelSmall, color = TextSecondary)
+    }
+}
+
+@Composable
+private fun CommunityStatCard(embassyId: String, visaTypeName: String, headerLabel: String) {
+    var state by remember(embassyId, visaTypeName) {
+        mutableStateOf<CommunityStatState>(CommunityStatState.Loading)
+    }
+    LaunchedEffect(embassyId, visaTypeName) {
+        state = CommunityStatState.Loading
+        state = try {
+            when (val stats = CommunitySubmissionRepository.fetchAggregateStats(embassyId, visaTypeName)) {
+                null -> CommunityStatState.NotEnoughData
+                else -> CommunityStatState.Loaded(stats)
+            }
+        } catch (e: kotlinx.coroutines.CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            CommunityStatState.Error
+        }
+    }
+
+    AccentCard(title = headerLabel, accentColor = IrishGreen) {
+        when (val s = state) {
+            is CommunityStatState.Loading -> Row(verticalAlignment = Alignment.CenterVertically) {
+                CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp, color = IrishGreen)
+                Spacer(Modifier.width(8.dp))
+                Text("Loading community stats…", style = MaterialTheme.typography.bodySmall, color = TextSecondary)
+            }
+            is CommunityStatState.Loaded -> Column {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
+                    StatBlock("${s.stats.count}", "records")
+                    StatBlock("${s.stats.avgDays.roundToInt()}d", "avg days")
+                }
+                Spacer(Modifier.height(8.dp))
+                Row(Modifier.fillMaxWidth()) {
+                    if (s.stats.granted > 0) {
+                        Text("✅ ${s.stats.granted} granted", style = MaterialTheme.typography.labelSmall, color = IrishGreen, modifier = Modifier.padding(end = 12.dp))
+                    }
+                    if (s.stats.refused > 0) {
+                        Text("❌ ${s.stats.refused} refused", style = MaterialTheme.typography.labelSmall, color = StatusRed)
+                    }
+                }
+            }
+            is CommunityStatState.NotEnoughData -> Text(
+                "Not enough shared data yet for this embassy/visa type — check back later.",
+                style = MaterialTheme.typography.bodySmall,
+                color = TextSecondary,
+            )
+            is CommunityStatState.Error -> Text(
+                "Community stats unavailable — check your connection.",
+                style = MaterialTheme.typography.bodySmall,
+                color = TextSecondary,
+            )
+        }
     }
 }
