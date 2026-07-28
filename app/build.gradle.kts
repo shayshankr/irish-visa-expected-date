@@ -64,7 +64,7 @@ android {
 
 play {
     serviceAccountCredentials.set(rootProject.file("play-service-account.json"))
-    track.set("alpha")
+    track.set("production")
     defaultToAppBundles.set(true)
 }
 dependencies {
