@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.shayshankrathore.irishvisadate.ui.*
 import com.shayshankrathore.irishvisadate.ui.theme.IrishVisaExpectedDateTheme
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
 
@@ -22,6 +23,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LocalizationManager.applyLanguageOnStartup(this)
         enableEdgeToEdge()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -114,6 +116,10 @@ class MainActivity : ComponentActivity() {
                             CostCalculatorScreen(onBack = { screen = AppScreen.TRACKER })
                         AppScreen.VISA_VALIDITY ->
                             VisaValidityScreen(onBack = { screen = AppScreen.TRACKER })
+                        AppScreen.LANGUAGE_SETTINGS ->
+                            LanguageSettingsScreen(onBack = { screen = AppScreen.TRACKER })
+                        AppScreen.APPLICATION_STATUS ->
+                            ApplicationStatusScreen(onBack = { screen = AppScreen.TRACKER })
                     }
                 }
             }

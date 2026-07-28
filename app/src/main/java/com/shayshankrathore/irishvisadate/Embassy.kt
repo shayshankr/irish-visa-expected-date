@@ -25,6 +25,7 @@ data class Embassy(
     val courierDays: Int,
     val contact: EmbassyContact,
     val vacBookingUrl: String = "",  // VFS Global / BLS appointment booking page
+    val apiKey: String? = null,  // API key for status check endpoint; null if not supported
 )
 
 val EMBASSY_INDIA = Embassy(
@@ -45,6 +46,7 @@ val EMBASSY_INDIA = Embassy(
         address = "230 Jor Bagh, New Delhi 110003",
     ),
     vacBookingUrl = "https://visa.vfsglobal.com/ind/en/irl",
+    apiKey = "New Delhi",
 )
 
 val EMBASSY_MOSCOW = Embassy(
@@ -107,6 +109,7 @@ val EMBASSY_BEIJING = Embassy(
         address = "3 Ritan Dong Lu, Chaoyang District, Beijing 100600",
     ),
     vacBookingUrl = "https://visa.vfsglobal.com/chn/en/irl",
+    apiKey = "Beijing",
 )
 
 val EMBASSY_ANKARA = Embassy(
@@ -127,6 +130,7 @@ val EMBASSY_ANKARA = Embassy(
         address = "Uğur Mumcu Cad. 88, Gaziosmanpaşa, Ankara 06700",
     ),
     vacBookingUrl = "https://visa.vfsglobal.com/tur/en/irl",
+    apiKey = "Ankara",
 )
 
 val EMBASSY_ABU_DHABI = Embassy(
@@ -147,6 +151,7 @@ val EMBASSY_ABU_DHABI = Embassy(
         address = "Al Bateen Area, Khalifa bin Zayed St, Abu Dhabi",
     ),
     vacBookingUrl = "https://visa.vfsglobal.com/are/en/irl",
+    apiKey = "Abu Dhabi",
 )
 
 val EMBASSY_ISLAMABAD = Embassy(
@@ -228,6 +233,7 @@ val EMBASSY_NIGERIA = Embassy(
         address = "7 Summerton Road, Maitama, Abuja",
     ),
     vacBookingUrl = "https://visa.vfsglobal.com/nga/en/irl",
+    apiKey = "Abuja",
 )
 
 val EMBASSY_SOUTH_AFRICA = Embassy(

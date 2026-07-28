@@ -82,6 +82,7 @@ enum class AppScreen {
     TRACKER, GRANTED, REFUSED, CHECKLIST, DECISIONS_WEB, APP_LIST,
     FAQ, NOTIFICATION_SETTINGS, BACKUP,
     TRAVEL_PLANNER, COMMUNITY_TIMES, DOC_TRACKER, COST_CALCULATOR, VISA_VALIDITY,
+    LANGUAGE_SETTINGS, APPLICATION_STATUS,
 }
 
 // ── Harp watermark ────────────────────────────────────────────────────────────
@@ -872,11 +873,11 @@ private fun ScreenContent(
                 }
             }
             Spacer(Modifier.height(6.dp))
-            // Row 2: Checklist, My Apps, FAQ
+            // Row 2: Checklist, My Apps, Check Status
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 QuickButton("📋 Checklist", Modifier.weight(1f), smallText = true) { onOpenChecklist(visaType) }
                 QuickButton("📁 My Apps",   Modifier.weight(1f), smallText = true) { onNavigate(AppScreen.APP_LIST) }
-                QuickButton("❓ FAQ",        Modifier.weight(1f), smallText = true) { onNavigate(AppScreen.FAQ) }
+                QuickButton("🔎 Check",    Modifier.weight(1f), smallText = true) { onNavigate(AppScreen.APPLICATION_STATUS) }
             }
             Spacer(Modifier.height(6.dp))
             // Row 3: Contact, Notifications, Backup
@@ -884,6 +885,12 @@ private fun ScreenContent(
                 QuickButton("📞 Contact",   Modifier.weight(1f), smallText = true) { onShowContact() }
                 QuickButton("🔔 Notifs",    Modifier.weight(1f), smallText = true) { onNavigate(AppScreen.NOTIFICATION_SETTINGS) }
                 QuickButton("🗃 Backup",    Modifier.weight(1f), smallText = true) { onNavigate(AppScreen.BACKUP) }
+            }
+            Spacer(Modifier.height(6.dp))
+            // Row 3b: Language Settings
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                QuickButton("🌐 Language",  Modifier.weight(1f), smallText = true) { onNavigate(AppScreen.LANGUAGE_SETTINGS) }
+                Spacer(Modifier.weight(2f))
             }
             Spacer(Modifier.height(6.dp))
             // Row 4: Travel Planner, Visa Validity, Costs
