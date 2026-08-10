@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Upload IrishVisaExpectedDate v1.10.2 AAB to Play Console via Google Play API.
+Upload IrishVisaExpectedDate v1.10.3 AAB to Play Console via Google Play API.
 Uses service account authentication.
 """
 
@@ -12,8 +12,8 @@ from googleapiclient.http import MediaFileUpload
 
 # Configuration
 PACKAGE_NAME = "com.shayshankrathore.irishvisadate"
-VERSION_CODE = 28
-VERSION_NAME = "1.10.2"
+VERSION_CODE = 29
+VERSION_NAME = "1.10.3"
 SERVICE_ACCOUNT_FILE = "play-service-account.json"
 AAB_FILE = r"app\build\outputs\bundle\release\app-release.aab"
 TRACK = "internal"  # internal, alpha, beta, or production
@@ -67,11 +67,11 @@ def upload_aab():
                     "releaseNotes": [
                         {
                             "language": "en-US",
-                            "text": "v1.10.2 - Fix ANR crash in language settings\n\n"
+                            "text": "v1.10.3 - Emergency hotfix for startup crash\n\n"
+                                   "• FIXED: App crash on startup (WorkDatabase initialization error)\n"
                                    "• Fixed Application Not Responding (ANR) crash when changing language\n"
                                    "• Fixed language preference persistence using DataStore\n"
-                                   "• Added multi-language support screen (English, Hindi, Urdu, Arabic, Russian, Bengali, Chinese)\n"
-                                   "• Updated Gradle tooling for better build performance"
+                                   "• Added multi-language support screen (English, Hindi, Urdu, Arabic, Russian, Bengali, Chinese)"
                         }
                     ]
                 }
@@ -94,10 +94,11 @@ def upload_aab():
 
         print("\n" + "=" * 60)
         print(f"✓ Successfully uploaded v{VERSION_NAME} to {TRACK} track!")
+        print(f"  versionCode: {VERSION_CODE}")
         print(f"  Next steps:")
         print(f"  1. Review in Play Console")
         print(f"  2. Run: python promote_to_production.py")
-        print(f"     to move to production track")
+        print(f"     to move to production track (hotfix)")
         print("=" * 60)
         return True
 

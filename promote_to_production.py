@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Promote IrishVisaExpectedDate v1.10.2 from alpha to production track.
+Promote IrishVisaExpectedDate v1.10.3 from alpha to production track.
 Uses Google Play API via service account authentication.
 """
 
@@ -12,7 +12,7 @@ from googleapiclient.discovery import build
 
 # Configuration
 PACKAGE_NAME = "com.shayshankrathore.irishvisadate"
-VERSION_CODE = 28
+VERSION_CODE = 29
 SERVICE_ACCOUNT_FILE = "play-service-account.json"
 
 def get_credentials():
@@ -54,7 +54,7 @@ def promote_release():
             print(f"✗ Could not find release with versionCode {VERSION_CODE} in alpha")
             return False
 
-        print(f"✓ Found release v1.10.2 in alpha")
+        print(f"✓ Found release v1.10.3 in alpha")
 
         # Promote to production by updating production track
         production_body = {
@@ -73,7 +73,7 @@ def promote_release():
             track="production",
             body=production_body
         ).execute()
-        print(f"✓ Moved v1.10.2 to production track")
+        print(f"✓ Moved v1.10.3 to production track")
 
         # Clear from internal
         internal_body = {"releases": []}
@@ -84,7 +84,7 @@ def promote_release():
             track="internal",
             body=internal_body
         ).execute()
-        print(f"✓ Removed v1.10.2 from internal track")
+        print(f"✓ Removed v1.10.3 from internal track")
 
         # Commit the changes
         service.edits().commit(
@@ -100,7 +100,7 @@ def promote_release():
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("Promoting IrishVisaExpectedDate v1.10.2 to Production")
+    print("Promoting IrishVisaExpectedDate v1.10.3 to Production")
     print("=" * 60)
     success = promote_release()
     sys.exit(0 if success else 1)
