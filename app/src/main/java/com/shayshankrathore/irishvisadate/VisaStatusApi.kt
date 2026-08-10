@@ -36,7 +36,10 @@ object VisaStatusApi {
                 conn.readTimeout = 15_000
                 conn.setRequestProperty("Content-Type", "application/json")
 
-                val requestBody = JSONObject().put("application_number", applicationNumber).toString()
+                val requestBody = JSONObject()
+                    .put("application_number", applicationNumber)
+                    .put("embassy", embassyApiKey)
+                    .toString()
                 conn.outputStream.use { it.write(requestBody.toByteArray()) }
 
                 val code = conn.responseCode
