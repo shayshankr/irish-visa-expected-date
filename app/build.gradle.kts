@@ -24,8 +24,8 @@ android {
         applicationId = "com.shayshankrathore.irishvisadate"
         minSdk = 24
         targetSdk = 36
-        versionCode = 27
-        versionName = "1.10.1"
+        versionCode = 28
+        versionName = "1.10.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
