@@ -5,13 +5,10 @@ import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import java.util.Locale
-
-private val Context.dataStore by preferencesDataStore(name = "app_prefs")
 
 object LocalizationManager {
     data class Language(
@@ -49,7 +46,7 @@ object LocalizationManager {
     fun applyLanguageOnStartup(context: Context) {
         val languageCode = runBlocking {
             val key = stringPreferencesKey("app_language")
-            context.dataStore.data.map { it[key] ?: "en" }.first()
+            DataStoreProvider.getDataStore(context).data.map { it[key] ?: "en" }.first()
         }
         setAppLanguage(context, languageCode)
     }

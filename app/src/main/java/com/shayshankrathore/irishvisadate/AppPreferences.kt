@@ -4,14 +4,11 @@ import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 import java.util.UUID
-
-private val Context.dataStore by preferencesDataStore(name = "app_prefs")
 
 object AppPreferences {
     private val KEY_EMBASSY_ID      = stringPreferencesKey("embassy_id")
@@ -43,7 +40,7 @@ object AppPreferences {
     )
 
     fun flow(context: Context): Flow<SavedState> =
-        context.dataStore.data.map { prefs ->
+        DataStoreProvider.getDataStore(context).data.map { prefs ->
             SavedState(
                 embassyId      = prefs[KEY_EMBASSY_ID],
                 vacLabel       = prefs[KEY_VAC_LABEL],
@@ -63,7 +60,7 @@ object AppPreferences {
         passportExpiry: String? = null,
         biometricDate: String? = null,
     ) {
-        context.dataStore.edit { prefs ->
+        DataStoreProvider.getDataStore(context).edit { prefs ->
             prefs[KEY_EMBASSY_ID] = embassyId
             prefs[KEY_VAC_LABEL]  = vacLabel
             if (submissionDate != null) prefs[KEY_SUBMISSION] = submissionDate
@@ -86,7 +83,7 @@ object AppPreferences {
     )
 
     fun notificationSettingsFlow(context: Context): Flow<NotificationSettings> =
-        context.dataStore.data.map { prefs ->
+        DataStoreProvider.getDataStore(context).data.map { prefs ->
             NotificationSettings(
                 windowOpens = prefs[KEY_NOTIF_WINDOW]   ?: true,
                 midpoint    = prefs[KEY_NOTIF_MIDPOINT] ?: true,
@@ -96,7 +93,7 @@ object AppPreferences {
         }
 
     suspend fun saveNotificationSettings(context: Context, settings: NotificationSettings) {
-        context.dataStore.edit { prefs ->
+        DataStoreProvider.getDataStore(context).edit { prefs ->
             prefs[KEY_NOTIF_WINDOW]   = settings.windowOpens
             prefs[KEY_NOTIF_MIDPOINT] = settings.midpoint
             prefs[KEY_NOTIF_OVERDUE]  = settings.overdue
@@ -107,19 +104,19 @@ object AppPreferences {
     // ── Onboarding ────────────────────────────────────────────────────────────
 
     fun onboardingDoneFlow(context: Context): Flow<Boolean> =
-        context.dataStore.data.map { prefs -> prefs[KEY_ONBOARDING_DONE] ?: false }
+        DataStoreProvider.getDataStore(context).data.map { prefs -> prefs[KEY_ONBOARDING_DONE] ?: false }
 
     suspend fun markOnboardingDone(context: Context) {
-        context.dataStore.edit { prefs -> prefs[KEY_ONBOARDING_DONE] = true }
+        DataStoreProvider.getDataStore(context).edit { prefs -> prefs[KEY_ONBOARDING_DONE] = true }
     }
 
     // ── Language settings ──────────────────────────────────────────────────────
 
     fun languageFlow(context: Context): Flow<String> =
-        context.dataStore.data.map { prefs -> prefs[KEY_LANGUAGE] ?: "en" }
+        DataStoreProvider.getDataStore(context).data.map { prefs -> prefs[KEY_LANGUAGE] ?: "en" }
 
     suspend fun setLanguage(context: Context, languageCode: String) {
-        context.dataStore.edit { prefs -> prefs[KEY_LANGUAGE] = languageCode }
+        DataStoreProvider.getDataStore(context).edit { prefs -> prefs[KEY_LANGUAGE] = languageCode }
     }
 
     // ── Saved applications ────────────────────────────────────────────────────
@@ -141,12 +138,12 @@ object AppPreferences {
     )
 
     fun savedApplicationsFlow(context: Context): Flow<List<SavedApplication>> =
-        context.dataStore.data.map { prefs ->
+        DataStoreProvider.getDataStore(context).data.map { prefs ->
             prefs[KEY_SAVED_APPS]?.let { parseApps(it) } ?: emptyList()
         }
 
     suspend fun saveApplication(context: Context, app: SavedApplication) {
-        context.dataStore.edit { prefs ->
+        DataStoreProvider.getDataStore(context).edit { prefs ->
             val current  = prefs[KEY_SAVED_APPS]?.let { parseApps(it) } ?: emptyList()
             val isNew    = current.none { it.id == app.id }
             val finalApp = if (isNew && app.statusHistory.isBlank())
@@ -157,14 +154,14 @@ object AppPreferences {
     }
 
     suspend fun deleteApplication(context: Context, id: String) {
-        context.dataStore.edit { prefs ->
+        DataStoreProvider.getDataStore(context).edit { prefs ->
             val current = prefs[KEY_SAVED_APPS]?.let { parseApps(it) } ?: emptyList()
             prefs[KEY_SAVED_APPS] = serializeApps(current.filterNot { it.id == id })
         }
     }
 
     suspend fun updateApplicationStatus(context: Context, id: String, status: String) {
-        context.dataStore.edit { prefs ->
+        DataStoreProvider.getDataStore(context).edit { prefs ->
             val current = prefs[KEY_SAVED_APPS]?.let { parseApps(it) } ?: emptyList()
             val updated = current.map { app ->
                 if (app.id == id) {
@@ -184,7 +181,7 @@ object AppPreferences {
     }
 
     suspend fun updateApplicationNotes(context: Context, id: String, notes: String) {
-        context.dataStore.edit { prefs ->
+        DataStoreProvider.getDataStore(context).edit { prefs ->
             val current = prefs[KEY_SAVED_APPS]?.let { parseApps(it) } ?: emptyList()
             prefs[KEY_SAVED_APPS] = serializeApps(current.map { app ->
                 if (app.id == id) app.copy(notes = notes) else app
@@ -193,7 +190,7 @@ object AppPreferences {
     }
 
     suspend fun setApplicationDecisionDate(context: Context, id: String, decisionDate: String) {
-        context.dataStore.edit { prefs ->
+        DataStoreProvider.getDataStore(context).edit { prefs ->
             val current = prefs[KEY_SAVED_APPS]?.let { parseApps(it) } ?: emptyList()
             prefs[KEY_SAVED_APPS] = serializeApps(current.map { app ->
                 if (app.id == id) app.copy(
@@ -205,17 +202,17 @@ object AppPreferences {
     }
 
     suspend fun exportApps(context: Context): String =
-        context.dataStore.data.map { prefs -> prefs[KEY_SAVED_APPS] ?: "[]" }.first()
+        DataStoreProvider.getDataStore(context).data.map { prefs -> prefs[KEY_SAVED_APPS] ?: "[]" }.first()
 
     suspend fun importApps(context: Context, json: String): Int {
         val imported = parseApps(json)
         if (imported.isEmpty()) return 0
-        val current = context.dataStore.data
+        val current = DataStoreProvider.getDataStore(context).data
             .map { prefs -> prefs[KEY_SAVED_APPS]?.let { parseApps(it) } ?: emptyList() }
             .first()
         val newOnes = imported.filterNot { imp -> current.any { it.id == imp.id } }
         if (newOnes.isNotEmpty()) {
-            context.dataStore.edit { prefs ->
+            DataStoreProvider.getDataStore(context).edit { prefs ->
                 prefs[KEY_SAVED_APPS] = serializeApps(current + newOnes)
             }
         }
@@ -242,19 +239,19 @@ object AppPreferences {
     )
 
     fun trackedDocumentsFlow(context: Context): Flow<List<TrackedDocument>> =
-        context.dataStore.data.map { prefs ->
+        DataStoreProvider.getDataStore(context).data.map { prefs ->
             prefs[KEY_DOCUMENTS]?.let { parseDocs(it) } ?: emptyList()
         }
 
     suspend fun saveDocument(context: Context, doc: TrackedDocument) {
-        context.dataStore.edit { prefs ->
+        DataStoreProvider.getDataStore(context).edit { prefs ->
             val current = prefs[KEY_DOCUMENTS]?.let { parseDocs(it) } ?: emptyList()
             prefs[KEY_DOCUMENTS] = serializeDocs(current.filterNot { it.id == doc.id } + doc)
         }
     }
 
     suspend fun deleteDocument(context: Context, id: String) {
-        context.dataStore.edit { prefs ->
+        DataStoreProvider.getDataStore(context).edit { prefs ->
             val current = prefs[KEY_DOCUMENTS]?.let { parseDocs(it) } ?: emptyList()
             prefs[KEY_DOCUMENTS] = serializeDocs(current.filterNot { it.id == id })
         }
@@ -263,12 +260,12 @@ object AppPreferences {
     // ── Watchdog hashes ───────────────────────────────────────────────────────
 
     suspend fun getWatchdogHash(context: Context, embassyId: String): String? {
-        val raw = context.dataStore.data.map { it[KEY_WATCHDOG_HASHES] ?: "" }.first()
+        val raw = DataStoreProvider.getDataStore(context).data.map { it[KEY_WATCHDOG_HASHES] ?: "" }.first()
         return raw.split(",").firstOrNull { it.startsWith("$embassyId::") }?.substringAfter("::")
     }
 
     suspend fun setWatchdogHash(context: Context, embassyId: String, hash: String) {
-        context.dataStore.edit { prefs ->
+        DataStoreProvider.getDataStore(context).edit { prefs ->
             val raw     = prefs[KEY_WATCHDOG_HASHES] ?: ""
             val entries = raw.split(",").filter { it.isNotBlank() && !it.startsWith("$embassyId::") }
             prefs[KEY_WATCHDOG_HASHES] = (entries + "$embassyId::$hash").joinToString(",")
@@ -278,12 +275,12 @@ object AppPreferences {
     // ── Community sharing (Firestore opt-in tracking) ─────────────────────────
 
     fun sharedAppIdsFlow(context: Context): Flow<Set<String>> =
-        context.dataStore.data.map { prefs ->
+        DataStoreProvider.getDataStore(context).data.map { prefs ->
             (prefs[KEY_SHARED_APP_IDS] ?: "").split(",").filter { it.isNotBlank() }.toSet()
         }
 
     suspend fun markApplicationShared(context: Context, id: String) {
-        context.dataStore.edit { prefs ->
+        DataStoreProvider.getDataStore(context).edit { prefs ->
             val current = (prefs[KEY_SHARED_APP_IDS] ?: "").split(",").filter { it.isNotBlank() }.toSet()
             prefs[KEY_SHARED_APP_IDS] = (current + id).joinToString(",")
         }
