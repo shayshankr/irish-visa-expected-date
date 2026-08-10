@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 """
-Promote IrishVisaExpectedDate v1.10.3 from alpha to production track.
+Promote IrishVisaExpectedDate v1.10.5 from internal to production track.
 Uses Google Play API via service account authentication.
 """
 
 import json
 import sys
+sys.stdout.reconfigure(encoding='utf-8') if hasattr(sys.stdout, 'reconfigure') else None
 from google.auth.transport.requests import Request
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 
 # Configuration
 PACKAGE_NAME = "com.shayshankrathore.irishvisadate"
-VERSION_CODE = 29
+VERSION_CODE = 31
 SERVICE_ACCOUNT_FILE = "play-service-account.json"
 
 def get_credentials():
@@ -51,10 +52,10 @@ def promote_release():
                 break
 
         if not our_release:
-            print(f"✗ Could not find release with versionCode {VERSION_CODE} in alpha")
+            print(f"✗ Could not find release with versionCode {VERSION_CODE} in internal")
             return False
 
-        print(f"✓ Found release v1.10.3 in alpha")
+        print(f"✓ Found release v1.10.5 in internal")
 
         # Promote to production by updating production track
         production_body = {
@@ -73,7 +74,7 @@ def promote_release():
             track="production",
             body=production_body
         ).execute()
-        print(f"✓ Moved v1.10.3 to production track")
+        print(f"✓ Moved v1.10.5 to production track")
 
         # Clear from internal
         internal_body = {"releases": []}
@@ -84,7 +85,7 @@ def promote_release():
             track="internal",
             body=internal_body
         ).execute()
-        print(f"✓ Removed v1.10.3 from internal track")
+        print(f"✓ Removed v1.10.5 from internal track")
 
         # Commit the changes
         service.edits().commit(
@@ -100,7 +101,7 @@ def promote_release():
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("Promoting IrishVisaExpectedDate v1.10.3 to Production")
+    print("Promoting IrishVisaExpectedDate v1.10.5 to Production")
     print("=" * 60)
     success = promote_release()
     sys.exit(0 if success else 1)

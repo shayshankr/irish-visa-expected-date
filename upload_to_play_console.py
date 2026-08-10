@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-Upload IrishVisaExpectedDate v1.10.3 AAB to Play Console via Google Play API.
+Upload IrishVisaExpectedDate v1.10.5 AAB to Play Console via Google Play API.
 Uses service account authentication.
 """
 
 import sys
 import os
+sys.stdout.reconfigure(encoding='utf-8') if hasattr(sys.stdout, 'reconfigure') else None
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 
 # Configuration
 PACKAGE_NAME = "com.shayshankrathore.irishvisadate"
-VERSION_CODE = 29
-VERSION_NAME = "1.10.3"
+VERSION_CODE = 31
+VERSION_NAME = "1.10.5"
 SERVICE_ACCOUNT_FILE = "play-service-account.json"
 AAB_FILE = r"app\build\outputs\bundle\release\app-release.aab"
 TRACK = "internal"  # internal, alpha, beta, or production
@@ -67,11 +69,9 @@ def upload_aab():
                     "releaseNotes": [
                         {
                             "language": "en-US",
-                            "text": "v1.10.3 - Emergency hotfix for startup crash\n\n"
-                                   "• FIXED: App crash on startup (WorkDatabase initialization error)\n"
-                                   "• Fixed Application Not Responding (ANR) crash when changing language\n"
-                                   "• Fixed language preference persistence using DataStore\n"
-                                   "• Added multi-language support screen (English, Hindi, Urdu, Arabic, Russian, Bengali, Chinese)"
+                            # TODO: no source changes were found since v1.10.4 (versionCode 30) as of this
+                            # edit. Replace this placeholder with real release notes before uploading.
+                            "text": "v1.10.5 - TODO: describe what changed in this release"
                         }
                     ]
                 }
