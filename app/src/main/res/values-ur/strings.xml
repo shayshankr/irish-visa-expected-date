@@ -9,6 +9,8 @@
     <string name="section_visa_type">🛂  ویزا کی قسم</string>
     <string name="section_got_update">🔔  کوئی اپڈیٹ ملی؟</string>
     <string name="section_quick_actions">⚡  فوری اقدامات</string>
+    <string name="section_biometric">🫆  بائیومیٹرک مقررہ (اختیاری)</string>
+    <string name="section_passport_expiry">🛂  پاسپورٹ کی تاریخ انقضا (اختیاری)</string>
 
     <string name="btn_pick_date">جمع کرانے کی تاریخ منتخب کریں</string>
     <string name="btn_change_date">تاریخ تبدیل کریں</string>
@@ -28,6 +30,14 @@
     <string name="btn_faq">❓ عام سوالات</string>
     <string name="btn_notifications">🔔 اطلاعات</string>
     <string name="btn_backup">🗃 بیک اپ</string>
+    <string name="btn_travel_planner">🗓 سفری منصوبہ</string>
+    <string name="btn_visa_validity">📋 درستگی</string>
+    <string name="btn_cost_calculator">💰 اخراجات</string>
+    <string name="btn_doc_tracker">📄 دستاویزات</string>
+    <string name="btn_community_times">📊 اوقات</string>
+    <string name="btn_compare_vac">⚖️ موازنہ</string>
+    <string name="btn_pdf_export">📄 PDF</string>
+    <string name="btn_book_vac">🌐 VAC بک کریں</string>
 
     <string name="status_update_prompt">اپنی درخواست کا نتیجہ بتائیں:</string>
     <string name="decision_between">فیصلے کی توقع اس درمیان:</string>
@@ -35,6 +45,8 @@
     <string name="overdue_message">آپ کی درخواست تاخیر کا شکار ہو سکتی ہے — ویزا آفس کو ای میل کریں۔</string>
     <string name="no_apps_title">کوئی محفوظ درخواست نہیں</string>
     <string name="no_apps_body">موجودہ درخواست محفوظ کرنے کے لیے ٹریکر پر «میری درخواستیں» کا بٹن استعمال کریں۔</string>
+    <string name="passport_expiry_warning">پاسپورٹ فیصلے کی تاریخ کے قریب ختم ہو سکتا ہے</string>
+    <string name="visa_fee_label">درخواست کی رقم: €%d (غیر منسلک)</string>
 
     <string name="screen_checklist">دستاویز چیک لسٹ</string>
     <string name="screen_decisions">ویزا فیصلے</string>
@@ -43,4 +55,22 @@
     <string name="screen_faq">عام سوالات</string>
     <string name="screen_notification_settings">اطلاع کی ترتیبات</string>
     <string name="screen_backup">بیک اپ اور بحالی</string>
+    <string name="screen_onboarding">خوش آمدید</string>
+    <string name="screen_travel_planner">سفری منصوبہ</string>
+    <string name="screen_community_times">کمیونٹی کے پروسیسنگ اوقات</string>
+    <string name="screen_doc_tracker">دستاویز کی ختم ہونے والی تاریخ ٹریکر</string>
+    <string name="screen_cost_calculator">لاگت کیلکولیٹر</string>
+    <string name="screen_visa_validity">ویزا درستگی کیلکولیٹر</string>
+    <string name="screen_language_settings">زبان کی ترتیبات</string>
+
+    <!-- Language Selection -->
+    <string name="language_english">English</string>
+    <string name="language_hindi">हिंदी</string>
+    <string name="language_urdu">اردو</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_bengali">বাংলা</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_select_title">زبان منتخب کریں</string>
+    <string name="language_select_subtitle">اپنی پسندیدہ زبان منتخب کریں</string>
 </resources>

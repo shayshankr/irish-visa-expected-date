@@ -9,6 +9,8 @@
     <string name="section_visa_type">🛂  वीज़ा प्रकार</string>
     <string name="section_got_update">🔔  कोई अपडेट मिला?</string>
     <string name="section_quick_actions">⚡  त्वरित कार्य</string>
+    <string name="section_biometric">🫆  बायोमेट्रिक नियुक्ति (वैकल्पिक)</string>
+    <string name="section_passport_expiry">🛂  पासपोर्ट समाप्ति (वैकल्पिक)</string>
 
     <!-- Buttons -->
     <string name="btn_pick_date">आवेदन तिथि चुनें</string>
@@ -24,6 +26,19 @@
     <string name="btn_open_decisions">🌐  वीज़ा निर्णय पृष्ठ खोलें</string>
     <string name="btn_back">← वापस</string>
     <string name="btn_close">बंद करें</string>
+    <string name="btn_email_visa_office">📧 वीज़ा कार्यालय को ईमेल (पूर्व-भरा)</string>
+    <string name="btn_contact_embassy">📞 संपर्क करें</string>
+    <string name="btn_faq">❓ सामान्य प्रश्न</string>
+    <string name="btn_notifications">🔔 सूचनाएं</string>
+    <string name="btn_backup">🗃 बैकअप</string>
+    <string name="btn_travel_planner">🗓 यात्रा योजना</string>
+    <string name="btn_visa_validity">📋 वैधता</string>
+    <string name="btn_cost_calculator">💰 लागत</string>
+    <string name="btn_doc_tracker">📄 दस्तावेज़</string>
+    <string name="btn_community_times">📊 समय</string>
+    <string name="btn_compare_vac">⚖️ तुलना</string>
+    <string name="btn_pdf_export">📄 PDF</string>
+    <string name="btn_book_vac">🌐 VAC बुक करें</string>
 
     <!-- Status messages -->
     <string name="status_update_prompt">अपने आवेदन का परिणाम बताएं:</string>
@@ -32,10 +47,33 @@
     <string name="overdue_message">आपका आवेदन विलंबित हो सकता है — स्थिति जानने के लिए वीज़ा कार्यालय को ईमेल करें।</string>
     <string name="no_apps_title">अभी कोई सहेजा हुआ आवेदन नहीं</string>
     <string name="no_apps_body">वर्तमान आवेदन सहेजने के लिए ट्रैकर पर \"मेरे आवेदन\" बटन का उपयोग करें।</string>
+    <string name="passport_expiry_warning">पासपोर्ट निर्णय तिथि के बहुत करीब समाप्त हो सकता है</string>
+    <string name="visa_fee_label">आवेदन शुल्क: €%d (गैर-वापसी योग्य)</string>
 
     <!-- Screens -->
     <string name="screen_checklist">दस्तावेज़ चेकलिस्ट</string>
     <string name="screen_decisions">वीज़ा निर्णय</string>
     <string name="screen_my_applications">मेरे आवेदन</string>
     <string name="screen_visa_refused">वीज़ा अस्वीकार</string>
+    <string name="screen_faq">सामान्य प्रश्न</string>
+    <string name="screen_notification_settings">सूचना सेटिंग्स</string>
+    <string name="screen_backup">बैकअप और पुनर्स्थापन</string>
+    <string name="screen_onboarding">स्वागत है</string>
+    <string name="screen_travel_planner">यात्रा योजना</string>
+    <string name="screen_community_times">सामुदायिक प्रसंस्करण समय</string>
+    <string name="screen_doc_tracker">दस्तावेज़ समाप्ति ट्रैकर</string>
+    <string name="screen_cost_calculator">लागत कैलकुलेटर</string>
+    <string name="screen_visa_validity">वीज़ा वैधता कैलकुलेटर</string>
+    <string name="screen_language_settings">भाषा सेटिंग्स</string>
+
+    <!-- Language Selection -->
+    <string name="language_english">English</string>
+    <string name="language_hindi">हिंदी</string>
+    <string name="language_urdu">اردو</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_bengali">বাংলা</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_select_title">भाषा चुनें</string>
+    <string name="language_select_subtitle">अपनी पसंदीदा भाषा चुनें</string>
 </resources>

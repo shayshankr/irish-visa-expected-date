@@ -66,4 +66,16 @@
     <string name="screen_doc_tracker">Document Expiry Tracker</string>
     <string name="screen_cost_calculator">Cost Calculator</string>
     <string name="screen_visa_validity">Visa Validity Calculator</string>
+    <string name="screen_language_settings">Language Settings</string>
+
+    <!-- Language Selection -->
+    <string name="language_english">English</string>
+    <string name="language_hindi">हिंदी</string>
+    <string name="language_urdu">اردو</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_bengali">বাংলা</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_select_title">Select Language</string>
+    <string name="language_select_subtitle">Choose your preferred language</string>
 </resources>

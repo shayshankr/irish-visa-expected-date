@@ -29,6 +29,7 @@ object AppPreferences {
     private val KEY_DOCUMENTS       = stringPreferencesKey("tracked_documents")
     private val KEY_WATCHDOG_HASHES = stringPreferencesKey("watchdog_hashes")
     private val KEY_SHARED_APP_IDS  = stringPreferencesKey("shared_app_ids")
+    private val KEY_LANGUAGE        = stringPreferencesKey("app_language")
 
     // ── Tracker state ─────────────────────────────────────────────────────────
 
@@ -110,6 +111,15 @@ object AppPreferences {
 
     suspend fun markOnboardingDone(context: Context) {
         context.dataStore.edit { prefs -> prefs[KEY_ONBOARDING_DONE] = true }
+    }
+
+    // ── Language settings ──────────────────────────────────────────────────────
+
+    fun languageFlow(context: Context): Flow<String> =
+        context.dataStore.data.map { prefs -> prefs[KEY_LANGUAGE] ?: "en" }
+
+    suspend fun setLanguage(context: Context, languageCode: String) {
+        context.dataStore.edit { prefs -> prefs[KEY_LANGUAGE] = languageCode }
     }
 
     // ── Saved applications ────────────────────────────────────────────────────

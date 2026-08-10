@@ -9,6 +9,8 @@
     <string name="section_visa_type">🛂  نوع التأشيرة</string>
     <string name="section_got_update">🔔  هل تلقيت تحديثاً؟</string>
     <string name="section_quick_actions">⚡  إجراءات سريعة</string>
+    <string name="section_biometric">🫆  موعد البيومتريا (اختياري)</string>
+    <string name="section_passport_expiry">🛂  انتهاء صلاحية جواز السفر (اختياري)</string>
 
     <string name="btn_pick_date">اختر تاريخ التقديم</string>
     <string name="btn_change_date">تغيير التاريخ</string>
@@ -28,6 +30,14 @@
     <string name="btn_faq">❓ أسئلة شائعة</string>
     <string name="btn_notifications">🔔 الإشعارات</string>
     <string name="btn_backup">🗃 نسخ احتياطي</string>
+    <string name="btn_travel_planner">🗓 خطة السفر</string>
+    <string name="btn_visa_validity">📋 الصلاحية</string>
+    <string name="btn_cost_calculator">💰 التكاليف</string>
+    <string name="btn_doc_tracker">📄 المستندات</string>
+    <string name="btn_community_times">📊 الأوقات</string>
+    <string name="btn_compare_vac">⚖️ المقارنة</string>
+    <string name="btn_pdf_export">📄 PDF</string>
+    <string name="btn_book_vac">🌐 احجز VAC</string>
 
     <string name="status_update_prompt">أخبرنا بنتيجة طلبك:</string>
     <string name="decision_between">توقع قراراً بين</string>
@@ -35,6 +45,8 @@
     <string name="overdue_message">قد يكون طلبك متأخراً — تواصل مع مكتب التأشيرة للاستفسار عن الحالة.</string>
     <string name="no_apps_title">لا توجد طلبات محفوظة</string>
     <string name="no_apps_body">استخدم زر «طلباتي» في التطبيق لحفظ طلبك الحالي.</string>
+    <string name="passport_expiry_warning">قد تنتهي صلاحية جواز السفر بالقرب من تاريخ القرار</string>
+    <string name="visa_fee_label">رسوم التقديم: €%d (غير قابلة للاسترداد)</string>
 
     <string name="screen_checklist">قائمة المستندات</string>
     <string name="screen_decisions">قرارات التأشيرة</string>
@@ -43,4 +55,22 @@
     <string name="screen_faq">أسئلة شائعة</string>
     <string name="screen_notification_settings">إعدادات الإشعارات</string>
     <string name="screen_backup">نسخ احتياطي واستعادة</string>
+    <string name="screen_onboarding">أهلا وسهلا</string>
+    <string name="screen_travel_planner">خطة السفر</string>
+    <string name="screen_community_times">أوقات المعالجة المجتمعية</string>
+    <string name="screen_doc_tracker">متتبع انتهاء صلاحية المستندات</string>
+    <string name="screen_cost_calculator">حاسبة التكاليف</string>
+    <string name="screen_visa_validity">حاسبة صلاحية التأشيرة</string>
+    <string name="screen_language_settings">إعدادات اللغة</string>
+
+    <!-- Language Selection -->
+    <string name="language_english">English</string>
+    <string name="language_hindi">हिंदी</string>
+    <string name="language_urdu">اردو</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_bengali">বাংলা</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_select_title">اختر اللغة</string>
+    <string name="language_select_subtitle">اختر لغتك المفضلة</string>
 </resources>

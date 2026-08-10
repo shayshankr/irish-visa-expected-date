@@ -9,6 +9,8 @@
     <string name="section_visa_type">🛂  ТИП ВИЗЫ</string>
     <string name="section_got_update">🔔  ПОЛУЧИЛИ ОТВЕТ?</string>
     <string name="section_quick_actions">⚡  БЫСТРЫЕ ДЕЙСТВИЯ</string>
+    <string name="section_biometric">🫆  БИОМЕТРИЧЕСКОЕ НАЗНАЧЕНИЕ (ОПЦИОНАЛЬНО)</string>
+    <string name="section_passport_expiry">🛂  СРОК ДЕЙСТВИЯ ПАСПОРТА (ОПЦИОНАЛЬНО)</string>
 
     <!-- Buttons -->
     <string name="btn_pick_date">Выбрать дату подачи</string>
@@ -24,6 +26,19 @@
     <string name="btn_open_decisions">🌐  Открыть список решений</string>
     <string name="btn_back">← Назад</string>
     <string name="btn_close">Закрыть</string>
+    <string name="btn_email_visa_office">📧 Написать в визовый отдел</string>
+    <string name="btn_contact_embassy">📞 Контакты</string>
+    <string name="btn_faq">❓ Часто задаваемые вопросы</string>
+    <string name="btn_notifications">🔔 Уведомления</string>
+    <string name="btn_backup">🗃 Резервная копия</string>
+    <string name="btn_travel_planner">🗓 План путешествия</string>
+    <string name="btn_visa_validity">📋 Действительность</string>
+    <string name="btn_cost_calculator">💰 Расходы</string>
+    <string name="btn_doc_tracker">📄 Документы</string>
+    <string name="btn_community_times">📊 Сроки</string>
+    <string name="btn_compare_vac">⚖️ Сравнение</string>
+    <string name="btn_pdf_export">📄 PDF</string>
+    <string name="btn_book_vac">🌐 Записаться в VAC</string>
 
     <!-- Status messages -->
     <string name="status_update_prompt">Сообщите о результате вашей заявки:</string>
@@ -32,10 +47,33 @@
     <string name="overdue_message">Ваша заявка может задерживаться — напишите письмо в визовый отдел для уточнения статуса.</string>
     <string name="no_apps_title">Сохранённых заявок нет</string>
     <string name="no_apps_body">Используйте кнопку «Мои заявки» в трекере, чтобы сохранить текущую заявку.</string>
+    <string name="passport_expiry_warning">Паспорт может истечь близко к дате решения</string>
+    <string name="visa_fee_label">Сбор за заявку: €%d (невозвратный)</string>
 
     <!-- Screens -->
     <string name="screen_checklist">Список документов</string>
     <string name="screen_decisions">Решения по визам</string>
     <string name="screen_my_applications">Мои заявки</string>
     <string name="screen_visa_refused">Отказ в визе</string>
+    <string name="screen_faq">Часто задаваемые вопросы</string>
+    <string name="screen_notification_settings">Параметры уведомлений</string>
+    <string name="screen_backup">Резервная копия и восстановление</string>
+    <string name="screen_onboarding">Добро пожаловать</string>
+    <string name="screen_travel_planner">Планировщик путешествий</string>
+    <string name="screen_community_times">Сроки обработки сообщества</string>
+    <string name="screen_doc_tracker">Трекер истечения документов</string>
+    <string name="screen_cost_calculator">Калькулятор расходов</string>
+    <string name="screen_visa_validity">Калькулятор действительности визы</string>
+    <string name="screen_language_settings">Параметры языка</string>
+
+    <!-- Language Selection -->
+    <string name="language_english">English</string>
+    <string name="language_hindi">हिंदी</string>
+    <string name="language_urdu">اردو</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_bengali">বাংলা</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_select_title">Выберите язык</string>
+    <string name="language_select_subtitle">Выберите предпочитаемый язык</string>
 </resources>

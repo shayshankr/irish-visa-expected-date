@@ -9,6 +9,8 @@
     <string name="section_visa_type">🛂  签证类型</string>
     <string name="section_got_update">🔔  收到更新了吗？</string>
     <string name="section_quick_actions">⚡  快捷操作</string>
+    <string name="section_biometric">🫆  生物识别预约（可选）</string>
+    <string name="section_passport_expiry">🛂  护照过期日期（可选）</string>
 
     <string name="btn_pick_date">选择提交日期</string>
     <string name="btn_change_date">更改日期</string>
@@ -28,6 +30,14 @@
     <string name="btn_faq">❓ 常见问题</string>
     <string name="btn_notifications">🔔 通知</string>
     <string name="btn_backup">🗃 备份</string>
+    <string name="btn_travel_planner">🗓 旅行计划</string>
+    <string name="btn_visa_validity">📋 有效期</string>
+    <string name="btn_cost_calculator">💰 费用</string>
+    <string name="btn_doc_tracker">📄 文件</string>
+    <string name="btn_community_times">📊 处理时间</string>
+    <string name="btn_compare_vac">⚖️ 比较</string>
+    <string name="btn_pdf_export">📄 PDF</string>
+    <string name="btn_book_vac">🌐 预约VAC</string>
 
     <string name="status_update_prompt">请告知您的申请结果：</string>
     <string name="decision_between">预计决定时间：</string>
@@ -35,6 +45,8 @@
     <string name="overdue_message">您的申请可能已逾期 — 请发邮件给签证处查询状态。</string>
     <string name="no_apps_title">暂无保存的申请</string>
     <string name="no_apps_body">在跟踪器上使用"我的申请"按钮保存当前申请。</string>
+    <string name="passport_expiry_warning">护照可能在决定日期附近过期</string>
+    <string name="visa_fee_label">申请费: €%d（不可退款）</string>
 
     <string name="screen_checklist">文件清单</string>
     <string name="screen_decisions">签证决定</string>
@@ -43,4 +55,22 @@
     <string name="screen_faq">常见问题</string>
     <string name="screen_notification_settings">通知设置</string>
     <string name="screen_backup">备份与恢复</string>
+    <string name="screen_onboarding">欢迎</string>
+    <string name="screen_travel_planner">旅行计划</string>
+    <string name="screen_community_times">社区处理时间</string>
+    <string name="screen_doc_tracker">文件过期跟踪器</string>
+    <string name="screen_cost_calculator">费用计算器</string>
+    <string name="screen_visa_validity">签证有效期计算器</string>
+    <string name="screen_language_settings">语言设置</string>
+
+    <!-- Language Selection -->
+    <string name="language_english">English</string>
+    <string name="language_hindi">हिंदी</string>
+    <string name="language_urdu">اردو</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_russian">Русский</string>
+    <string name="language_bengali">বাংলা</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_select_title">选择语言</string>
+    <string name="language_select_subtitle">选择您偏好的语言</string>
 </resources>
