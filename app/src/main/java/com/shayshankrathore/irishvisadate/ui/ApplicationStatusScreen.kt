@@ -257,86 +257,154 @@ fun ApplicationStatusScreen(onBack: () -> Unit) {
                                     Spacer(Modifier.height(8.dp))
 
                                     result.before?.let {
-                                        Row(
+                                        Column(
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .background(
                                                     Color(0xFFF2FBF5),
                                                     RoundedCornerShape(8.dp)
                                                 )
-                                                .padding(12.dp),
-                                            horizontalArrangement = Arrangement.SpaceBetween,
-                                            verticalAlignment = Alignment.CenterVertically
+                                                .padding(14.dp),
+                                            verticalArrangement = Arrangement.spacedBy(10.dp)
                                         ) {
-                                            Column(modifier = Modifier.weight(1f)) {
-                                                Text(
-                                                    text = "Below ↓",
-                                                    fontSize = 11.sp,
-                                                    color = TextHint
-                                                )
-                                                Text(
-                                                    text = it.number,
-                                                    fontWeight = FontWeight.Bold,
-                                                    fontSize = 13.sp,
-                                                    color = TextPrimary
-                                                )
-                                            }
-                                            Column(horizontalAlignment = Alignment.End) {
-                                                Text(
-                                                    text = it.decision,
-                                                    fontWeight = FontWeight.Bold,
-                                                    fontSize = 11.sp,
-                                                    color = if (it.isApproved) IrishGreen else StatusRed
-                                                )
-                                                if (it.difference != null) {
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.SpaceBetween
+                                            ) {
+                                                Column(modifier = Modifier.weight(1f)) {
                                                     Text(
-                                                        text = "${it.difference} positions away",
+                                                        text = "Below ↓",
+                                                        fontSize = 10.sp,
+                                                        color = TextHint,
+                                                        fontWeight = FontWeight.SemiBold
+                                                    )
+                                                    Spacer(Modifier.height(4.dp))
+                                                    Text(
+                                                        text = "App #:",
+                                                        fontSize = 9.sp,
+                                                        color = TextHint
+                                                    )
+                                                    Text(
+                                                        text = it.number,
+                                                        fontWeight = FontWeight.Bold,
+                                                        fontSize = 14.sp,
+                                                        color = TextPrimary
+                                                    )
+                                                }
+                                                Column(horizontalAlignment = Alignment.End, modifier = Modifier.weight(1f)) {
+                                                    Text(
+                                                        text = "Decision",
+                                                        fontSize = 9.sp,
+                                                        color = TextHint
+                                                    )
+                                                    Text(
+                                                        text = it.decision,
+                                                        fontWeight = FontWeight.Bold,
+                                                        fontSize = 12.sp,
+                                                        color = if (it.isApproved) IrishGreen else StatusRed
+                                                    )
+                                                }
+                                            }
+                                            if (it.difference != null) {
+                                                Row(
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .background(
+                                                            Color.White.copy(alpha = 0.6f),
+                                                            RoundedCornerShape(6.dp)
+                                                        )
+                                                        .padding(10.dp),
+                                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                                    verticalAlignment = Alignment.CenterVertically
+                                                ) {
+                                                    Text(
+                                                        text = "Difference",
                                                         fontSize = 10.sp,
                                                         color = TextHint
+                                                    )
+                                                    Text(
+                                                        text = it.difference.toString(),
+                                                        fontWeight = FontWeight.ExtraBold,
+                                                        fontSize = 13.sp,
+                                                        color = IrishGreen
                                                     )
                                                 }
                                             }
                                         }
-                                        Spacer(Modifier.height(8.dp))
+                                        Spacer(Modifier.height(10.dp))
                                     }
 
                                     result.after?.let {
-                                        Row(
+                                        Column(
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .background(
                                                     Color(0xFFF2FBF5),
                                                     RoundedCornerShape(8.dp)
                                                 )
-                                                .padding(12.dp),
-                                            horizontalArrangement = Arrangement.SpaceBetween,
-                                            verticalAlignment = Alignment.CenterVertically
+                                                .padding(14.dp),
+                                            verticalArrangement = Arrangement.spacedBy(10.dp)
                                         ) {
-                                            Column(modifier = Modifier.weight(1f)) {
-                                                Text(
-                                                    text = "Above ↑",
-                                                    fontSize = 11.sp,
-                                                    color = TextHint
-                                                )
-                                                Text(
-                                                    text = it.number,
-                                                    fontWeight = FontWeight.Bold,
-                                                    fontSize = 13.sp,
-                                                    color = TextPrimary
-                                                )
-                                            }
-                                            Column(horizontalAlignment = Alignment.End) {
-                                                Text(
-                                                    text = it.decision,
-                                                    fontWeight = FontWeight.Bold,
-                                                    fontSize = 11.sp,
-                                                    color = if (it.isApproved) IrishGreen else StatusRed
-                                                )
-                                                if (it.difference != null) {
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.SpaceBetween
+                                            ) {
+                                                Column(modifier = Modifier.weight(1f)) {
                                                     Text(
-                                                        text = "${it.difference} positions away",
+                                                        text = "Above ↑",
+                                                        fontSize = 10.sp,
+                                                        color = TextHint,
+                                                        fontWeight = FontWeight.SemiBold
+                                                    )
+                                                    Spacer(Modifier.height(4.dp))
+                                                    Text(
+                                                        text = "App #:",
+                                                        fontSize = 9.sp,
+                                                        color = TextHint
+                                                    )
+                                                    Text(
+                                                        text = it.number,
+                                                        fontWeight = FontWeight.Bold,
+                                                        fontSize = 14.sp,
+                                                        color = TextPrimary
+                                                    )
+                                                }
+                                                Column(horizontalAlignment = Alignment.End, modifier = Modifier.weight(1f)) {
+                                                    Text(
+                                                        text = "Decision",
+                                                        fontSize = 9.sp,
+                                                        color = TextHint
+                                                    )
+                                                    Text(
+                                                        text = it.decision,
+                                                        fontWeight = FontWeight.Bold,
+                                                        fontSize = 12.sp,
+                                                        color = if (it.isApproved) IrishGreen else StatusRed
+                                                    )
+                                                }
+                                            }
+                                            if (it.difference != null) {
+                                                Row(
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .background(
+                                                            Color.White.copy(alpha = 0.6f),
+                                                            RoundedCornerShape(6.dp)
+                                                        )
+                                                        .padding(10.dp),
+                                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                                    verticalAlignment = Alignment.CenterVertically
+                                                ) {
+                                                    Text(
+                                                        text = "Difference",
                                                         fontSize = 10.sp,
                                                         color = TextHint
+                                                    )
+                                                    Text(
+                                                        text = it.difference.toString(),
+                                                        fontWeight = FontWeight.ExtraBold,
+                                                        fontSize = 13.sp,
+                                                        color = IrishGreen
                                                     )
                                                 }
                                             }
