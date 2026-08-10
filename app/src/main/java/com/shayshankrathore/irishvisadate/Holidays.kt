@@ -4,7 +4,7 @@ import java.time.LocalDate
 
 // Verify floating holidays (Islamic, Hindu lunar, Chinese lunar) against an
 // official calendar each year and update this constant when you do.
-const val HOLIDAYS_LAST_UPDATED = "2026-06-06"
+const val HOLIDAYS_LAST_UPDATED = "2026-08-10"
 
 // ── Irish public holidays (shared base for all embassies) ─────────────────────
 
@@ -48,8 +48,11 @@ private val INDIA_2026: Set<LocalDate> = setOf(
     LocalDate.of(2026, 3, 20),  // Eid-ul-Fitr (verify)
     LocalDate.of(2026, 5, 11),  // Buddha Purnima (verify)
     LocalDate.of(2026, 5, 27),  // Eid-ul-Adha (verify)
+    LocalDate.of(2026, 8, 13),  // Irish Embassy closure for relocation
+    LocalDate.of(2026, 8, 14),  // Irish Embassy closure for relocation
     LocalDate.of(2026, 8, 15),  // Independence Day
     LocalDate.of(2026, 8, 16),  // Janmashtami (verify)
+    LocalDate.of(2026, 8, 17),  // Irish Embassy closure for relocation
     LocalDate.of(2026, 8, 28),  // Raksha Bandhan (verify)
     LocalDate.of(2026, 10, 2),  // Gandhi Jayanti
     LocalDate.of(2026, 10, 20), // Dussehra (verify)
